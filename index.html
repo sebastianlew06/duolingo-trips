@@ -1,0 +1,1037 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Duolingo Trips concept prototype: an etiquette-first Culture Quest for Japan and Korea. Not an official Duolingo product.">
+<meta name="theme-color" content="#58CC02">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Trips">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+</head>
+<body>
+<title>Trips Concept Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Noto+Sans+JP:wght@500;700&family=Noto+Sans+KR:wght@500;700&display=swap">
+<style>
+/* Layout: desktop = phone frame + guide panel; phone = the app full screen. Duolingo-style path, lesson sheets and Duo guide; the Culture Quest is the hero flow. */
+:root{
+  --bg:#F4F7F2; --panel:#FFFFFF; --fg:#2B2F33; --muted:#6B7378; --line:#E3E8E5;
+  --green:#58CC02; --green-d:#46A302; --green-ink:#3A8A00; --green-soft:#D7FFB8;
+  --blue:#1CB0F6; --blue-d:#1899D6; --orange:#FF9600; --red:#E5484D; --red-d:#B83236; --red-soft:#FFDFE0;
+  --yellow:#FFC800; --yellow-d:#E0A800; --purple:#9C6ADE; --purple-d:#7B4FC0; --card:#FFFFFF; --soft:#F1F5EF; --phone:#1E2326; --free:#6B7378;
+  --display:'Nunito','Arial Rounded MT Bold',system-ui,sans-serif; --cjk:'Noto Sans JP','Noto Sans KR','Hiragino Sans','Apple SD Gothic Neo',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#12171A;--panel:#1A2125;--fg:#ECF0EE;--muted:#9AA5A9;--line:#2C363B;--card:#1F272B;--soft:#232D31;--phone:#000;--green-ink:#7BDB2E;--green-soft:#22361A;--red-soft:#3A2224;--free:#9AA5A9;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12171A;--panel:#1A2125;--fg:#ECF0EE;--muted:#9AA5A9;--line:#2C363B;--card:#1F272B;--soft:#232D31;--phone:#000;--green-ink:#7BDB2E;--green-soft:#22361A;--red-soft:#3A2224;--free:#9AA5A9;color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--display);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{display:flex;gap:48px;justify-content:center;align-items:flex-start;padding-block:28px;max-width:1100px;margin:0 auto}
+.guide{max-width:370px;min-width:0;padding-top:24px}
+.guide h1{font-size:34px;font-weight:900;line-height:1.1;text-wrap:balance;margin:8px 0 10px}
+.guide p{color:var(--muted);font-size:16px;line-height:1.5;margin:0 0 14px}
+.guide ol{padding-left:20px;margin:0 0 16px;line-height:1.65;font-weight:700}
+.guide h3{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin:18px 0 8px}
+.guide ul{padding-left:18px;margin:0 0 14px;line-height:1.5;color:var(--muted);font-weight:600;font-size:14px}
+.guide .note{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.tag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--green-ink)}
+.wordmark{font-weight:900;font-size:22px;letter-spacing:-.02em;color:var(--green);display:inline-flex;align-items:center;gap:6px}
+.wordmark span{color:var(--blue);font-weight:800}
+.phone{width:390px;max-width:100%;height:820px;background:var(--phone);border-radius:48px;padding:12px;flex:none;box-shadow:0 30px 60px rgba(0,0,0,.18)}
+.screen{background:var(--panel);border-radius:38px;height:100%;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.concept{background:var(--soft);color:var(--muted);font-size:11px;font-weight:700;text-align:center;padding:7px 14px;letter-spacing:.02em}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 18px 8px;border-bottom:2px solid var(--line)}
+.chips{display:flex;gap:10px}
+.chip{display:inline-flex;align-items:center;gap:3px;font-weight:900;font-size:14px;font-variant-numeric:tabular-nums}
+.flame{color:var(--orange)} .gem{color:var(--blue)} .heart{color:var(--red)}
+.view{flex:1;overflow-y:auto;padding:14px 18px 18px;display:flex;flex-direction:column;gap:14px}
+.nav{display:flex;border-top:2px solid var(--line);padding:6px 6px calc(8px + env(safe-area-inset-bottom,0px))}
+.nav button{flex:1;background:none;border:2px solid transparent;border-radius:14px;padding:6px 0;font:800 13px var(--display);color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav button .ic{font-size:20px;line-height:1}
+.nav button[aria-current="true"]{color:var(--blue);border-color:color-mix(in srgb,var(--blue) 35%,transparent);background:color-mix(in srgb,var(--blue) 10%,transparent)}
+.lessonmode .top,.lessonmode .nav{display:none}
+@media (max-width:820px){
+  .guide{display:none}.wrap{padding-block:0}
+  body{padding-left:0;padding-right:0}
+  .phone{width:100%;height:100%;min-height:600px;padding:0;border-radius:0;background:transparent;box-shadow:none}
+  .screen{border-radius:0}
+  .view,.top{padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+  .nav{padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px))}
+}
+h2{font-size:23px;font-weight:900;margin:0;line-height:1.2;text-wrap:balance}
+.sub{color:var(--muted);font-weight:700;font-size:15px;margin:0;line-height:1.4}
+.small{font-size:13px;color:var(--muted);font-weight:700;margin:0;line-height:1.4}
+.btn{display:block;width:100%;border:0;border-radius:16px;padding:14px;font:900 16px var(--display);letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--green);box-shadow:0 4px 0 var(--green-d);cursor:pointer;text-align:center;text-decoration:none;box-sizing:border-box}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--green-d)}
+.btn:disabled{background:var(--line);box-shadow:0 4px 0 color-mix(in srgb,var(--line) 70%,#000);color:var(--muted);cursor:not-allowed}
+.btn.blue{background:var(--blue);box-shadow:0 4px 0 var(--blue-d)}
+.btn.purple{background:var(--purple);box-shadow:0 4px 0 var(--purple-d)}
+.btn.red{background:var(--red);box-shadow:0 4px 0 var(--red-d)}
+.btn.ghost{background:var(--card);color:var(--blue);box-shadow:0 4px 0 var(--line);border:2px solid var(--line)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px 16px}
+.row{display:flex;gap:10px;align-items:center}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{border:2px solid var(--line);background:var(--card);border-radius:14px;padding:10px 12px;font:800 15px var(--display);color:var(--fg);cursor:pointer;box-shadow:0 3px 0 var(--line)}
+.pill[aria-pressed="true"]{border-color:var(--blue);color:var(--blue);box-shadow:0 3px 0 var(--blue-d);background:color-mix(in srgb,var(--blue) 8%,var(--card))}
+.scroller{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;margin:0 -2px;scrollbar-width:none}
+.scroller .pill{white-space:nowrap;flex:none;font-size:14px;padding:8px 12px}
+/* Date roller: three snap-scrolling wheels; the middle row is the selection. */
+.wheel{position:relative;display:flex;gap:4px;height:180px;margin-top:10px;border-radius:16px;background:var(--soft);overflow:hidden}
+.wheel::before{content:"";position:absolute;left:8px;right:8px;top:72px;height:36px;border-radius:10px;background:var(--card);border:2px solid color-mix(in srgb,var(--blue) 45%,var(--line));box-sizing:border-box;pointer-events:none}
+.col{position:relative;flex:1;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;padding:72px 0;box-sizing:border-box;-webkit-mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent);outline:none}
+.col::-webkit-scrollbar{display:none}
+.col:focus-visible{box-shadow:inset 0 0 0 3px var(--blue);border-radius:12px}
+.col div{height:36px;line-height:36px;text-align:center;scroll-snap-align:center;font:800 17px var(--display);color:var(--muted);cursor:pointer;font-variant-numeric:tabular-nums;user-select:none}
+.col div.on{color:var(--fg);font-size:19px;font-weight:900}
+.col div.off{opacity:.3}
+.wheel-labels{display:flex;gap:4px;margin-top:8px}
+.wheel-labels span{flex:1;text-align:center;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lvl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.lvl .pill{text-align:left;display:flex;flex-direction:column;gap:2px}
+.lvl .pill small{font-weight:700;font-size:12px;color:var(--muted)}
+.count{display:flex;align-items:baseline;gap:8px}
+.count b{font-size:52px;font-weight:900;color:var(--green);line-height:1;font-variant-numeric:tabular-nums}
+
+/* Progress bars: Duolingo-style with a highlight; width animates from its last value. */
+.bar{height:16px;background:var(--line);border-radius:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green);border-radius:10px;position:relative;transition:width .6s cubic-bezier(.3,1.4,.6,1);min-width:0}
+.bar i::after{content:"";position:absolute;left:8px;right:8px;top:3px;height:4px;border-radius:4px;background:rgba(255,255,255,.35)}
+
+/* Duo */
+.duo-say{display:flex;gap:10px;align-items:flex-end}
+.duo-say svg{flex:none}
+.bubble{position:relative;border:2px solid var(--line);border-radius:16px;padding:10px 12px;font-weight:800;font-size:15px;line-height:1.35;background:var(--card);min-width:0}
+.bubble::before{content:"";position:absolute;left:-9px;bottom:14px;width:14px;height:14px;background:var(--card);border-left:2px solid var(--line);border-bottom:2px solid var(--line);transform:rotate(45deg)}
+.duo-bob{animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+
+/* Unit banner and path */
+.unit{background:var(--green);color:#fff;border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 4px 0 var(--green-d)}
+.unit small{display:block;font-weight:900;font-size:13px;letter-spacing:.06em;opacity:.9;text-transform:uppercase}
+.unit b{font-size:19px;font-weight:900;line-height:1.2}
+.unit .book{font-size:24px;border-left:2px solid rgba(255,255,255,.35);padding-left:12px}
+.path{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0}
+.stop{display:flex;flex-direction:column;align-items:center;gap:4px;position:relative}
+.node{width:66px;height:60px;border-radius:50%;display:grid;place-items:center;font-size:26px;color:#fff;background:var(--line);box-shadow:0 6px 0 color-mix(in srgb,var(--line) 65%,#000);border:0;cursor:pointer}
+.node.now{background:var(--green);box-shadow:0 6px 0 var(--green-d)}
+.node.done{background:var(--yellow);box-shadow:0 6px 0 var(--yellow-d)}
+.node.trophy{background:var(--purple);box-shadow:0 6px 0 var(--purple-d);width:78px;height:70px;font-size:32px}
+.node.trophy.done{background:var(--yellow);box-shadow:0 6px 0 var(--yellow-d)}
+.startflag{position:absolute;top:-30px;background:var(--card);color:var(--green-ink);border:2px solid var(--line);border-radius:10px;padding:2px 8px;font-weight:900;font-size:12px;letter-spacing:.06em;animation:bob 1.6s ease-in-out infinite}
+.lbl{font-weight:800;font-size:12.5px;color:var(--muted);text-align:center;max-width:150px;line-height:1.25}
+.lbl em{display:block;font-style:normal;color:var(--green-ink);font-size:11.5px}
+
+/* Lesson screens */
+.lhead{display:flex;align-items:center;gap:12px}
+.lhead .bar{flex:1}
+.xbtn{border:0;background:none;color:var(--muted);font:900 26px/1 var(--display);cursor:pointer;padding:0 4px}
+.tagline{display:inline-flex;align-items:center;gap:6px;font-weight:900;font-size:13px;color:var(--purple);letter-spacing:.06em;text-transform:uppercase}
+.scene{border-radius:20px;padding:14px;display:flex;gap:14px;align-items:center;background:color-mix(in srgb,var(--blue) 9%,var(--card));border:2px solid color-mix(in srgb,var(--blue) 22%,var(--line))}
+.scene .em{font-size:40px;line-height:1;flex:none}
+.scene .place{font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--blue-d)}
+.opt{display:block;width:100%;text-align:left;border:2px solid var(--line);background:var(--card);border-radius:16px;padding:12px 14px;font:800 16px/1.35 var(--display);color:var(--fg);cursor:pointer;box-shadow:0 4px 0 var(--line)}
+.opt:disabled{cursor:default}
+.opt.sel{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 10%,var(--card));box-shadow:0 4px 0 var(--blue-d);color:var(--blue-d)}
+.opt.ok{border-color:var(--green);background:color-mix(in srgb,var(--green) 12%,var(--card));box-shadow:0 4px 0 var(--green-d)}
+.opt.no{border-color:var(--red);background:color-mix(in srgb,var(--red) 10%,var(--card));box-shadow:0 4px 0 var(--red-d)}
+.opt.dim{opacity:.5}
+.reaction{display:flex;gap:12px;align-items:flex-start;border-radius:18px;padding:12px 14px;border:2px solid var(--line);background:var(--card)}
+.face{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-size:30px;flex:none;background:var(--soft)}
+.reaction.ok .face{animation:hop .5s ease}
+.reaction.no .face{animation:shake .45s ease}
+@keyframes hop{30%{transform:translateY(-10px) scale(1.08)}60%{transform:translateY(0)}}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.reaction b{font-size:13px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.reaction p{margin:2px 0 0;font-weight:700;font-size:15px;line-height:1.45}
+.why{background:var(--soft);border-radius:16px;padding:12px 14px}
+.why b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--purple)}
+.why p{margin:4px 0 0;font-weight:600;font-size:14px;line-height:1.5}
+.src{display:block;margin-top:6px;font-size:12px;color:var(--muted);font-weight:700}
+.sev{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;border-radius:8px;padding:3px 8px;white-space:nowrap}
+.sev i{font-style:normal;letter-spacing:1px}
+.sev.s1{background:color-mix(in srgb,var(--yellow) 26%,var(--card));color:#8A6A00}
+.sev.s2{background:color-mix(in srgb,var(--orange) 22%,var(--card));color:#B25F00}
+.sev.s3{background:color-mix(in srgb,var(--red) 18%,var(--card));color:var(--red)}
+.sheet{position:sticky;bottom:-18px;margin:auto -18px -18px;padding:14px 18px calc(18px + env(safe-area-inset-bottom,0px));background:var(--panel);border-top:2px solid var(--line);display:flex;flex-direction:column;gap:10px;z-index:2}
+.sheet.ok{background:var(--green-soft);border-top-color:transparent}
+.sheet.no{background:var(--red-soft);border-top-color:transparent}
+.sheet h3{margin:0;font-size:21px;font-weight:900;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sheet.ok h3{color:var(--green-ink)} .sheet.no h3{color:var(--red)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tile{border-radius:16px;border:2px solid;overflow:hidden;text-align:center}
+.tile small{display:block;color:#fff;font-weight:900;font-size:11.5px;letter-spacing:.06em;padding:5px 2px;text-transform:uppercase}
+.tile b{display:block;padding:10px 4px;font-size:22px;font-weight:900;background:var(--card);font-variant-numeric:tabular-nums}
+.t1{border-color:var(--yellow)} .t1 small{background:var(--yellow)} .t1 b{color:var(--yellow-d)}
+.t2{border-color:var(--green)} .t2 small{background:var(--green)} .t2 b{color:var(--green-ink)}
+.t3{border-color:var(--blue)} .t3 small{background:var(--blue)} .t3 b{color:var(--blue-d)}
+.mlist{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.mitem{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.mitem span:first-child{min-width:0}
+.hyper{border-color:color-mix(in srgb,var(--purple) 45%,var(--line));background:color-mix(in srgb,var(--purple) 8%,var(--card))}
+
+/* Badge and share */
+.badge{border-radius:24px;padding:20px 18px;text-align:center;background:linear-gradient(165deg,var(--green),#2F8F00);color:#fff;display:flex;flex-direction:column;gap:6px;align-items:center}
+.badge b{display:block;font-size:28px;font-weight:900;line-height:1.1}
+.scorebox{display:flex;gap:10px;margin-top:8px;width:100%}
+.scorebox div{flex:1;background:rgba(255,255,255,.18);border-radius:14px;padding:8px 6px}
+.scorebox strong{display:block;font-size:23px;font-weight:900;font-variant-numeric:tabular-nums}
+.scorebox span{font-size:12px;font-weight:800}
+.share img{width:100%;border-radius:16px;border:2px solid var(--line);display:block}
+.socials{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.soc{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--fg);text-decoration:none;font-weight:800;font-size:12px;box-shadow:0 3px 0 var(--line)}
+.soc i{font-style:normal;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:900;font-size:15px}
+.copybox{width:100%;box-sizing:border-box;border:2px solid var(--line);border-radius:14px;padding:10px 12px;font:600 14px/1.4 var(--display);background:var(--soft);color:var(--fg);resize:none}
+
+/* Set Off and others */
+.cjk{font-family:var(--cjk);font-weight:700}
+.rom{color:var(--muted);font-weight:700}
+.play{border:0;background:var(--blue);color:#fff;border-radius:12px;width:44px;height:44px;font-size:18px;cursor:pointer;flex:none;box-shadow:0 3px 0 var(--blue-d)}
+.offline{background:var(--phone);color:#fff;border-radius:14px;padding:10px 14px;font-weight:800;font-size:14px;display:flex;justify-content:space-between;gap:8px}
+.sos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.sos div{background:var(--soft);border-radius:12px;padding:8px;text-align:center}
+.sos b{display:block;font-size:22px;font-weight:900;color:var(--red);font-variant-numeric:tabular-nums}
+.sos span{font-size:12px;font-weight:800;color:var(--muted)}
+.region{border-radius:16px;padding:12px 14px;background:color-mix(in srgb,var(--purple) 9%,var(--card));border:2px solid color-mix(in srgb,var(--purple) 25%,var(--line))}
+.region b{font-size:17px}
+.search{border:2px solid var(--line);border-radius:14px;padding:12px 14px;font:700 16px var(--display);width:100%;background:var(--card);color:var(--fg);box-sizing:border-box}
+.tone{font-size:11px;font-weight:900;border-radius:6px;padding:2px 6px;white-space:nowrap;letter-spacing:.03em}
+.tone.polite{background:color-mix(in srgb,var(--green) 16%,var(--card));color:var(--green-ink)}
+.tone.casual{background:color-mix(in srgb,var(--orange) 18%,var(--card));color:#B25F00}
+.tone.local{background:color-mix(in srgb,var(--purple) 16%,var(--card));color:var(--purple-d)}
+.post{display:flex;gap:10px}
+.av{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:900;color:#fff}
+.post p{margin:2px 0 0;line-height:1.4;font-size:15px}
+.host{font-size:11px;font-weight:900;color:var(--green-ink);background:color-mix(in srgb,var(--green) 14%,var(--card));border-radius:6px;padding:2px 6px;margin-left:6px}
+.wrapped{background:linear-gradient(170deg,var(--green),#2F8F00);color:#fff;border-radius:24px;padding:20px}
+.wrapped .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.wrapped .grid div{background:rgba(255,255,255,.16);border-radius:14px;padding:10px}
+.wrapped .grid b{display:block;font-size:26px;font-weight:900;font-variant-numeric:tabular-nums}
+/* Free / Trip Pass / Super layer */
+.mode{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 14px 0;font-size:12px;font-weight:800;color:var(--muted)}
+.mode button{border:2px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:4px 12px;font:800 12px var(--display);cursor:pointer}
+.mode button[aria-pressed="true"]{border-color:var(--purple);color:#fff;background:var(--purple)}
+.mode button.freeb[aria-pressed="true"]{border-color:var(--free);background:var(--free)}
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.t{display:inline-block;font-size:10px;font-weight:900;letter-spacing:.06em;border-radius:6px;padding:2px 6px;vertical-align:middle;white-space:nowrap}
+.t.free{background:color-mix(in srgb,var(--free) 16%,var(--card));color:var(--free)}
+.t.pass{background:var(--purple);color:#fff}
+.t.super{background:linear-gradient(90deg,var(--blue),var(--purple));color:#fff}
+.feats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.feat{text-align:left;border:2px solid var(--line);background:var(--card);border-radius:16px;padding:10px 12px;font:800 14px/1.25 var(--display);color:var(--fg);cursor:pointer;box-shadow:0 3px 0 var(--line);display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.feat .ic{font-size:22px}
+.feat.locked{background:var(--soft);color:var(--muted)}
+.feat .lk{position:absolute;top:10px;right:10px;color:var(--muted)}
+.feat{position:relative}
+.lockcard{border:2px dashed var(--purple);background:color-mix(in srgb,var(--purple) 7%,var(--card));border-radius:18px;padding:12px 14px}
+.lockcard b{color:var(--purple)}
+.meter{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:13px}
+.dots{display:flex;gap:4px}.dots i{width:13px;height:13px;border-radius:50%;background:var(--green)}.dots i.used{background:var(--line)}
+.reg{display:flex;gap:6px;margin-top:8px}
+.reg button{flex:1;border:2px solid var(--line);background:var(--card);border-radius:10px;padding:5px;font:800 12px var(--display);color:var(--muted);cursor:pointer}
+.reg button[aria-pressed="true"]{border-color:var(--green);color:var(--green-ink)}
+.lily{width:104px;height:104px;border-radius:50%;margin:4px auto;display:grid;place-items:center;background:var(--purple);color:#fff;font-size:40px;font-weight:900}
+.wave{display:flex;gap:4px;justify-content:center;align-items:center;height:30px}
+.wave i{width:5px;border-radius:3px;background:var(--blue)}
+.mic{width:92px;height:92px;border-radius:50%;margin:6px auto;display:grid;place-items:center;background:var(--blue);box-shadow:0 7px 0 var(--blue-d);color:#fff;font-size:36px;border:0;cursor:pointer}
+.mic.listen{animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.06)}}
+.fb{border-radius:16px;padding:11px 14px;font-weight:800}
+.fb.ok{background:color-mix(in srgb,var(--green) 16%,var(--card));color:var(--green-ink)}
+.fb p{margin:4px 0 0;color:var(--fg);font-weight:600;font-size:14px;line-height:1.45}
+.tier{display:flex;justify-content:space-between;align-items:center;cursor:pointer;text-align:left;width:100%;font:inherit;color:inherit;gap:10px}
+.tier[aria-pressed="true"]{border-color:var(--purple);box-shadow:0 4px 0 var(--purple-d)}
+.price{font-size:21px;font-weight:900;white-space:nowrap}
+.superc{border-radius:20px;padding:14px;background:linear-gradient(160deg,color-mix(in srgb,var(--blue) 16%,var(--card)),color-mix(in srgb,var(--purple) 18%,var(--card)));border:2px solid color-mix(in srgb,var(--purple) 40%,var(--line))}
+.strike{text-decoration:line-through;color:var(--muted);font-weight:700}
+.keep{display:grid;grid-template-columns:1fr auto auto;gap:6px 10px;font-size:13px;font-weight:700;align-items:center;margin-top:8px}
+.toast{position:absolute;left:18px;right:18px;bottom:96px;background:var(--fg);color:var(--panel);border-radius:14px;padding:12px 14px;font-weight:800;text-align:center;z-index:5}
+
+/* iPhone frame (desktop only): titanium edge, side buttons, Dynamic Island, status bar, home indicator. */
+.phone{position:relative;width:393px;max-width:100%;height:852px;border-radius:62px;padding:12px;background:#0B0C0E;flex:none;box-shadow:0 0 0 2px #8A8D92,0 0 0 5px #3A3C40,0 0 0 6px #1E1F22,0 40px 80px rgba(0,0,0,.28);box-sizing:border-box}
+.screen{border-radius:50px}
+.hw{position:absolute;width:5px;background:linear-gradient(90deg,#55585D,#2E3034);border-radius:3px}
+.hw-action{left:-9px;top:128px;height:32px}.hw-vol1{left:-9px;top:186px;height:60px}.hw-vol2{left:-9px;top:258px;height:60px}.hw-power{right:-9px;top:220px;height:96px;background:linear-gradient(270deg,#55585D,#2E3034)}
+.island{position:absolute;top:23px;left:50%;transform:translateX(-50%);width:124px;height:36px;border-radius:20px;background:#000;z-index:20}
+.status{display:flex;justify-content:space-between;align-items:center;padding:16px 30px 6px 40px;font:700 16px -apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif;color:var(--fg);background:var(--panel);min-height:24px}
+.status .plane{color:var(--orange);display:inline-flex}
+.homebar{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:var(--fg);opacity:.85;z-index:6}
+.phone .nav{padding-bottom:22px}
+.lessonmode .status{background:var(--panel)}
+.ico{display:inline-block;vertical-align:middle;flex:none}
+.ico.fill{fill:currentColor}
+.flag{display:inline-block;vertical-align:-3px;border-radius:3px;flex:none}
+.chip{gap:4px}
+.nav button .ic{height:24px;display:grid;place-items:center}
+.emo{display:inline-block;line-height:1;vertical-align:middle;flex:none}
+.node{color:#fff}.node:not(.now):not(.done):not(.trophy){color:var(--muted)}
+.unit .book{display:grid;place-items:center}
+.feat .ic{color:var(--blue)}.feat.locked .ic{color:var(--muted)}
+.tile b{display:flex;align-items:center;justify-content:center;gap:4px}
+.t1 b .ico{color:var(--yellow-d)}
+.offline span:first-child{display:inline-flex;align-items:center;gap:6px}
+.play{display:grid;place-items:center}
+.regions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.regbtn{position:relative;text-align:left;border:2px solid var(--line);background:var(--card);border-radius:14px;padding:9px 26px 9px 11px;font:800 14px/1.2 var(--display);color:var(--fg);cursor:pointer;box-shadow:0 3px 0 var(--line);display:flex;flex-direction:column;gap:3px;min-width:0}
+.regbtn:first-child{grid-column:1/-1}
+.regbtn small{font-weight:700;font-size:12px;color:var(--muted)}
+.regbtn .lk{position:absolute;top:9px;right:8px;color:var(--muted)}
+.regbtn[aria-pressed="true"]{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 9%,var(--card));box-shadow:0 3px 0 var(--blue-d)}
+.regbtn[aria-pressed="true"] b{color:var(--blue-d)}
+.regbtn:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.callhead{display:flex;align-items:center;gap:12px;border:2px solid var(--line);border-radius:18px;padding:10px 12px}
+.callhead .lily{width:48px;height:48px;font-size:22px;margin:0;flex:none}
+.callhead b{display:block;font-size:16px}
+.callhead .wave{margin-left:auto;height:24px}
+.chat{display:flex;flex-direction:column;gap:8px}
+.msg{display:flex;gap:8px;align-items:flex-end;max-width:88%}
+.msg.from-you{align-self:flex-end;flex-direction:row-reverse}
+.lav{width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;font-weight:900;font-size:13px;display:grid;place-items:center;flex:none}
+.mb{border-radius:16px;padding:8px 12px;display:flex;flex-direction:column;gap:1px;background:color-mix(in srgb,var(--purple) 10%,var(--card));border:2px solid color-mix(in srgb,var(--purple) 25%,var(--line));min-width:0}
+.msg.from-you .mb{background:color-mix(in srgb,var(--blue) 12%,var(--card));border-color:color-mix(in srgb,var(--blue) 30%,var(--line))}
+.mb .cjk{font-size:16px}.mb .rom{font-size:12.5px}.mb .en{font-size:12.5px;color:var(--muted);font-weight:600}
+.fb.no{background:color-mix(in srgb,var(--red) 12%,var(--card));color:var(--red)}
+.mic{color:#fff}
+@media (max-width:820px){.hw,.island,.status,.homebar{display:none}.phone{width:100%;height:100%;min-height:600px;border-radius:0;padding:0;box-shadow:none;background:transparent}.screen{border-radius:0}.phone .nav{padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))}}
+@media (prefers-reduced-motion:reduce){.reaction .face,.duo-bob,.startflag{animation:none!important}.bar i{transition:none}}
+</style>
+
+<div class="wrap">
+  <section class="guide" aria-label="About this prototype">
+    <span class="tag">Try it yourself · 60 seconds</span><br>
+    <span class="wordmark" id="guideMark"></span>
+    <h1>Know the manners before you land</h1>
+    <p>A concept for Duolingo that turns a travel date into a plan, keeps it useful in the country, and carries the habit home. Switch between <b>Free</b> and <b>Trip Pass</b> at the top of the phone to see what each one gets.</p>
+    <div class="legend"><span class="t free">FREE</span><span class="t pass">TRIP PASS</span><span class="t super">SUPER</span></div>
+    <ol>
+      <li>Before: pick Japan or Korea and your exact travel date</li>
+      <li>Take the 60-second trip-ready check (5 situations)</li>
+      <li>See how locals react and how serious each slip is</li>
+      <li>Earn your badge and share it</li>
+      <li>In the country: phrases, polite or casual, and regional dialects</li>
+      <li>Back home: Trip Wrapped and the Super offer</li>
+    </ol>
+    <h3>Built on learning research</h3>
+    <ul>
+      <li>Guess first. Trying before being taught improves later recall (Richland, Kornell and Kao, 2009).</li>
+      <li>Severity ratings show which slips matter most, and the most serious mistakes come first in review.</li>
+      <li>Beginner and intermediate paths, so lessons start at the right level.</li>
+    </ul>
+    <p class="note">Concept prototype by SVR Consulting for the think-cell Global Case Competition 2026. Illustrative only, not an official Duolingo product. No sign-in and no payment. Calls and speech scoring are simulated. Japan etiquette draws on the Japan Tourism Agency's "Travel Etiquette for the Future" (Nov 2024) and travel etiquette guides. Scores and figures are illustrative.</p>
+  </section>
+
+  <div class="phone">
+    <span class="hw hw-action" aria-hidden="true"></span><span class="hw hw-vol1" aria-hidden="true"></span><span class="hw hw-vol2" aria-hidden="true"></span><span class="hw hw-power" aria-hidden="true"></span>
+    <span class="island" aria-hidden="true"></span>
+    <div class="screen" id="screen">
+      <div class="status" aria-hidden="true"><span id="clock"></span><span class="row" style="gap:5px" id="statusIcons"></span></div>
+      <div class="concept">Concept prototype · SVR Consulting · not an official Duolingo product</div>
+      <div class="mode" role="group" aria-label="View as">View as
+        <button type="button" class="freeb" id="mFree" data-act="mode" data-v="free">Free</button>
+        <button type="button" id="mPass" data-act="mode" data-v="pass">Trip Pass</button>
+      </div>
+      <div class="top">
+        <span class="chip" id="dest"></span>
+        <span class="chips"><span class="chip flame" id="streak"></span><span class="chip gem" id="xp"></span><span class="chip heart" id="hearts"></span></span>
+      </div>
+      <main class="view" id="view" aria-live="polite"></main>
+      <nav class="nav" id="nav" aria-label="Trip stages">
+        <button type="button" data-tab="ready"><span class="ic" id="navA"></span>Before</button>
+        <button type="button" data-tab="set"><span class="ic" id="navB"></span>In the country</button>
+        <button type="button" data-tab="go"><span class="ic" id="navC"></span>Back home</button>
+      </nav>
+      <span class="homebar" aria-hidden="true"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+const PUBLIC_URL = /^https?:$/.test(location.protocol) ? location.origin + location.pathname.replace(/index\.html$/, '') : 'https://claude.ai/artifact/3eG56HQ6ynfvkhHCaYtZ7P';
+
+/* Duo, drawn as a simple inline illustration. Moods: happy, sad, cheer. */
+function duo(mood = 'happy', size = 64, cls = ''){
+  const py = mood === 'sad' ? 55 : 50, wingY = mood === 'cheer' ? 36 : 80;
+  const brows = mood === 'sad' ? '<path d="M28 31 L50 38" stroke="#3A8A00" stroke-width="5" stroke-linecap="round"/><path d="M92 31 L70 38" stroke="#3A8A00" stroke-width="5" stroke-linecap="round"/>' : '';
+  const eyes = mood === 'cheer'
+    ? '<path d="M32 52 Q42 40 52 52" stroke="#2B2F33" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M68 52 Q78 40 88 52" stroke="#2B2F33" stroke-width="5" fill="none" stroke-linecap="round"/>'
+    : `<circle cx="45" cy="${py}" r="7.5" fill="#2B2F33"/><circle cx="75" cy="${py}" r="7.5" fill="#2B2F33"/><circle cx="47.5" cy="${py-3}" r="2.5" fill="#fff"/><circle cx="77.5" cy="${py-3}" r="2.5" fill="#fff"/>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" class="${cls}" viewBox="0 0 120 120" width="${size}" height="${size}" aria-hidden="true">
+    <ellipse cx="44" cy="111" rx="11" ry="5" fill="#FF9600"/><ellipse cx="76" cy="111" rx="11" ry="5" fill="#FF9600"/>
+    <path d="M20 60 Q2 ${wingY} 22 98 Z" fill="#46A302"/><path d="M100 60 Q118 ${wingY} 98 98 Z" fill="#46A302"/>
+    <path d="M30 28 L22 6 L46 20 Z" fill="#58CC02"/><path d="M90 28 L98 6 L74 20 Z" fill="#58CC02"/>
+    <path d="M60 14 C92 14 104 38 104 64 C104 94 86 108 60 108 C34 108 16 94 16 64 C16 38 28 14 60 14 Z" fill="#58CC02"/>
+    <ellipse cx="60" cy="86" rx="26" ry="19" fill="#89E219"/>
+    <circle cx="42" cy="50" r="16" fill="#fff"/><circle cx="78" cy="50" r="16" fill="#fff"/>${eyes}${brows}
+    <path d="M51 63 Q60 58 69 63 L60 76 Z" fill="#FF9600"/></svg>`;
+}
+function duoSay(text, mood = 'happy', size = 64){ return `<div class="duo-say">${duo(mood, size, 'duo-bob')}<div class="bubble">${text}</div></div>`; }
+
+/* Status bar glyphs: Lucide (ISC licence, lucide.dev). Everything else in the app uses emoji. */
+const ICONS = {"signal": "<path d=\"M2 20h.01\" /> <path d=\"M7 20v-4\" /> <path d=\"M12 20v-8\" /> <path d=\"M17 20V8\" /> <path d=\"M22 4v16\" />", "wifi": "<path d=\"M12 20h.01\" /> <path d=\"M2 8.82a15 15 0 0 1 20 0\" /> <path d=\"M5 12.859a10 10 0 0 1 14 0\" /> <path d=\"M8.5 16.429a5 5 0 0 1 7 0\" />", "battery-full": "<rect width=\"16\" height=\"10\" x=\"2\" y=\"7\" rx=\"2\" ry=\"2\" /> <line x1=\"22\" x2=\"22\" y1=\"11\" y2=\"13\" /> <line x1=\"6\" x2=\"6\" y1=\"11\" y2=\"13\" /> <line x1=\"10\" x2=\"10\" y1=\"11\" y2=\"13\" /> <line x1=\"14\" x2=\"14\" y1=\"11\" y2=\"13\" />", "plane": "<path d=\"M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z\" />"};
+function svgIc(name, size = 22){ return `<svg class="ico" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`; }
+const EMOJI = {'plane-landing':'🛬','train-front':'🚆','utensils':'🍜','torii-gate':'⛩️','landmark':'🛕','bed-double':'🏮','shopping-bag':'🛍️','siren':'🆘','check':'✓','medal':'🏅','trophy':'🏆','book-open':'📖','phone-call':'📞','languages':'🗾','users':'👥','download':'✈️','lock':'🔒','volume-2':'▶','heart':'❤️','flame':'🔥','gem':'💎','zap':'⚡','target':'🎯','timer':'⏱','wifi-off':'✈','wifi':'📶','lightbulb':'💡','mic':'🎤','calendar-days':'🗓','map-pin':'📍','house':'🏠'};
+function ic(name, size = 22){ return `<span class="emo" style="font-size:${Math.round(size*.9)}px" aria-hidden="true">${EMOJI[name] || name}</span>`; }
+const flagSvg = c => c === 'jp' ? '🇯🇵' : '🇰🇷';
+const EMO = {'🚕':'car-taxi-front','🗑️':'trash-2','📸':'camera','🚉':'train-front','🧳':'luggage','📱':'smartphone','🚶':'arrow-up-down','🍡':'croissant','💴':'banknote','🍢':'beer','🐟':'fish','⛩️':'torii-gate','💧':'droplets','🏮':'hotel','👘':'shirt','♨️':'waves','🛍️':'wallet','🚑':'ambulance','🙇':'handshake','🎂':'cake','☎️':'phone-call','🚇':'armchair','🧓':'accessibility','🚌':'bus','🍶':'wine','🍚':'soup','🥢':'utensils-crossed','🔔':'bell-ring','🛕':'landmark','🏘️':'moon','👟':'footprints','💳':'hand-coins'};
+const sceneIc = (q, size = 36) => `<span class="emo" style="font-size:${size}px" aria-hidden="true">${q.em}</span>`;
+const DEST = {
+  Tokyo:{flag:flagSvg('jp'), country:'Japan', lang:'Japanese', voice:'ja-JP', host:'Aiko', hostCity:'Kyoto', sacred:'torii-gate'},
+  Seoul:{flag:flagSvg('kr'), country:'Korea', lang:'Korean', voice:'ko-KR', host:'Min-jun', hostCity:'Seoul', sacred:'landmark'}
+};
+const MOMENTS = {arrive:['Arrival & streets','plane-landing'], move:['Getting around','train-front'], eat:['Eating & drinking','utensils'], sacred:['Temples & heritage',null], stay:['Where you stay','bed-double'], shop:['Shopping','shopping-bag'], emerg:['Emergencies','siren']};
+const ORDER_FULL = ['arrive','move','eat','sacred','stay','shop','emerg'];
+const ORDER_CRASH = ['arrive','emerg','eat','move','stay','sacred','shop'];
+const SEV = {1:['Minor slip','●○○'], 2:['Noticeable','●●○'], 3:['Serious','●●●']};
+const SRC = {
+  JTA:'Source: Japan Tourism Agency, "Travel Etiquette for the Future" and Tourism Pictograms (Nov 2024)',
+  JP:'Source: Japanese travel etiquette guides',
+  KR:'Source: Korean travel etiquette guides',
+  KTO:'Source: Korea Tourism Organization, 1330 Korea Travel Hotline'
+};
+
+/* Culture Quest content. o = [choice, correct, local face, local reaction]. sev = how serious the usual mistake is. check = in the 60-second trip-ready check. */
+const QUEST = {
+Tokyo:[
+ {m:'arrive',sev:1,em:'🚕',place:'Taxi rank, Narita Airport',q:'Your taxi pulls up. What do you do with the back door?',
+  o:[['Pull it open myself',0,'😅','The driver winces as the door fights its motor.'],['Wait, the driver opens it for me',1,'😊','The door swings open by itself. “Dōzo!”'],['Slam it shut hard once I’m in',0,'😬','The driver flinches. It would have closed on its own.']],
+  why:'Most Japanese taxis have rear doors the driver opens and closes for you. Let them, and get in on the left.',src:'JP'},
+ {m:'arrive',sev:2,check:1,em:'🗑️',place:'Shibuya, after a konbini coffee',q:'Your cup is empty and there are no bins on the street. What do you do?',
+  o:[['Leave it neatly on a wall ledge',0,'😟','Later, a shop owner has to clear it away.'],['Drop it in the nearest bicycle basket',0,'😠','The bike’s owner finds your rubbish.'],['Carry it to a konbini or station bin, or back to my hotel',1,'😊','The street stays spotless. A local gives you a small nod.']],
+  why:'Public bins are rare in Japan. “Dispose of trash responsibly” is one of the seven points in the national etiquette guide, so keep rubbish until you find a proper bin.',src:'JTA'},
+ {m:'arrive',sev:3,em:'📸',place:'A lane in Gion, Kyoto',q:'A maiko in kimono hurries past on her way to an appointment. Your camera is ready.',
+  o:[['Follow her for a close-up',0,'😣','She speeds up and looks away. Residents complain about exactly this.'],['Let her pass and keep my camera down',1,'🙇','She passes with a small bow. The lane stays calm.'],['Step in front and ask for a quick selfie',0,'😥','You block the lane and she has to stop.']],
+  why:'The national guidance asks travellers not to photograph people without permission. In parts of Gion, residents have put up signs banning photos on private lanes.',src:'JTA'},
+ {m:'move',sev:2,check:1,em:'🚉',place:'Shinjuku Station platform',q:'Your train is pulling in. Where do you stand?',
+  o:[['In the line at the floor markings, then let everyone off first',1,'😌','The line moves smoothly and you still get a seat.'],['Right in front of the doors so I get on first',0,'😤','People getting off have to push past you.'],['Slip in beside the front of the line',0,'😒','A sharp look. That counts as cutting in.']],
+  why:'Cutting in line is one of the behaviours shown in the Tourism Pictograms. Platforms have painted markings that show where to queue.',src:'JTA'},
+ {m:'move',sev:2,em:'🧳',place:'Shinkansen, Tokyo to Kyoto',q:'You have two large suitcases. How do you handle them?',
+  o:[['Put them in the aisle beside my seat',0,'😖','The trolley can’t get through and a passenger trips.'],['Stand them in the area by the doors',0,'😓','They block people getting off at Nagoya.'],['Book an oversized-luggage seat, or send them ahead with a delivery service',1,'😊','You ride light, and your bags meet you at the hotel.']],
+  why:'“Travel smart and travel light” asks visitors not to take large luggage into crowded spaces. On the Tokaido Shinkansen, very large bags need a reserved oversized-luggage seat.',src:'JTA'},
+ {m:'move',sev:2,em:'📱',place:'Yamanote Line, evening rush',q:'Your phone rings on a quiet train.',
+  o:[['Answer softly and keep it short',0,'🤨','Heads turn. Even a soft call stands out in a silent carriage.'],['Decline, text back and switch to silent (“manner mode”)',1,'😌','The carriage stays quiet. Nobody even looks up.'],['Put it on speaker so my hands are free',0,'😠','A passenger points at the “no calls” sticker.']],
+  why:'On Japanese trains, calls wait until you get off and phones go on silent. Keeping your voice low is part of “mind your manners while there”.',src:'JP'},
+ {m:'move',sev:1,em:'🚶',place:'Escalator at Tokyo Station',q:'You want to stand still on the escalator. Where do you stand?',
+  o:[['On the left, leaving the right side for walkers',1,'🙂','You blend right in with the commuters.'],['On the right, like in Osaka',0,'😅','A commuter is stuck behind you. In Tokyo that’s the walking side.'],['In the middle, with my suitcase beside me',0,'😤','Nobody can pass on either side.']],
+  why:'Tokyo stands on the left and Osaka on the right. Many rail companies now ask everyone to stand still on both sides for safety, so follow the signs where you see them.',src:'JP'},
+ {m:'eat',sev:2,em:'🍡',place:'Nakamise Street, Asakusa',q:'You just bought a hot melon pan on a packed shopping street. Where do you eat it?',
+  o:[['Walk and eat while I browse',0,'😬','A shopper squeezes past and crumbs land on the lane.'],['Stand beside the stall and finish it there',1,'😊','The vendor smiles and hands you a napkin. “Dōzo!”'],['Sit on the temple steps to eat',0,'🙅','A temple volunteer gently waves you off the steps.']],
+  why:'Eating while walking is one of the behaviours the Tourism Pictograms ask visitors to avoid in crowded areas. Many stalls expect you to eat on the spot.',src:'JTA'},
+ {m:'eat',sev:1,em:'💴',place:'Ramen shop, Shibuya',q:'The ramen was great. How do you thank the staff?',
+  o:[['Leave a 15% tip on the counter',0,'😟','The cook chases you down the street to return your money.'],['Say “gochisōsama deshita” as I leave',1,'😄','The kitchen calls back “Arigatō gozaimashita!”'],['Wave the cook over and hand them cash',0,'😳','He politely refuses. Tips aren’t part of the culture.']],
+  why:'Tipping isn’t expected in Japan and can cause awkwardness. “Gochisōsama deshita” (thank you for the meal) is the thanks staff appreciate.',src:'JP'},
+ {m:'eat',sev:1,em:'🍢',place:'Izakaya in Shinjuku',q:'A small dish you didn’t order arrives, and the bill shows a table charge.',
+  o:[['Enjoy it. It’s the otoshi, a cover charge with a starter',1,'😊','The owner tops up your edamame with a grin.'],['Send it back and refuse to pay',0,'😠','The mood sours. The charge is standard.'],['Tell the staff it’s a scam',0,'😣','The staff are embarrassed. Otoshi is normal at most izakaya.']],
+  why:'Many izakaya serve a small starter (otoshi) with a per-person table charge of a few hundred yen. It is normal, not a scam.',src:'JP'},
+ {m:'eat',sev:3,check:1,em:'🐟',place:'Dinner with friends, Osaka',q:'Your friend wants to try a piece of your grilled fish. How do you pass it?',
+  o:[['From my chopsticks straight to theirs',0,'😨','Everyone freezes. That gesture belongs to a funeral rite.'],['Place it on their plate, or let them take it from mine',1,'😋','“Meccha oishii!” Your friend loves it.'],['Spear it with one chopstick and hold it out',0,'😬','Your friend laughs nervously. Spearing food is bad manners too.']],
+  why:'Passing food chopstick to chopstick mirrors how family members pass cremated bones at Japanese funerals. Put food on a plate instead.',src:'JP'},
+ {m:'sacred',sev:2,em:'⛩️',place:'Meiji Jingu, main hall',q:'You reach the offering box at a Shinto shrine. How do you pray?',
+  o:[['Bow twice, clap twice, pray, then bow once',1,'🙏','A local beside you smiles and nods.'],['Clap loudly again and again, like at a festival',0,'😳','Heads turn. This is a place of quiet prayer.'],['Skip the prayer and take a selfie with the bell rope',0,'😒','An attendant gestures for you to step aside.']],
+  why:'At most Shinto shrines the routine is two bows, two claps, a silent prayer and one bow. At Buddhist temples you don’t clap. Walk to the side of the main path, as the centre is traditionally for the deity.',src:'JP'},
+ {m:'sacred',sev:2,em:'💧',place:'Water basin at a shrine gate',q:'You stop at the stone water basin by the entrance. What do you do?',
+  o:[['Drink straight from the ladle',0,'😧','A priest hurries over. The ladle never touches your lips.'],['Rinse my left hand, right hand, then my mouth from my cupped palm',1,'😌','You are purified and ready to enter.'],['Skip it and splash my face in the basin',0,'😬','Splashing in the basin is a real faux pas.']],
+  why:'The temizuya basin is for a short purification. Rinse each hand, pour a little water into your palm to rinse your mouth, and never drink from the ladle.',src:'JP'},
+ {m:'stay',sev:2,em:'🏮',place:'A ryokan in Hakone',q:'You arrive at a traditional inn. What do you do first?',
+  o:[['Keep my shoes on until I reach my room',0,'😳','Staff hurry over with slippers, worried about the tatami.'],['Take my shoes off at the entrance and step up',1,'🙇','“Irasshaimase!” Staff line up your shoes for you.'],['Ask staff to carry my shoes to the room',0,'🤔','Puzzled looks. Shoes stay at the entrance.']],
+  why:'Shoes come off at the genkan, the entrance below the raised floor. Slippers are for corridors and come off again before tatami.',src:'JP'},
+ {m:'stay',sev:3,em:'👘',place:'Your room at the ryokan',q:'You put on the cotton yukata the inn provides. How do you wrap it?',
+  o:[['Right side over left',0,'😨','The attendant gently stops you. That’s how the dead are dressed.'],['Left side over right',1,'😊','You look ready for dinner in the hall.'],['Whichever feels comfy',0,'😬','It matters. One way is only for funerals.']],
+  why:'Always wrap the left panel over the right, so it sits on top. Right over left is reserved for dressing the deceased.',src:'JP'},
+ {m:'stay',sev:3,check:1,em:'♨️',place:'Hot spring bath',q:'You are about to get into the onsen. What comes first?',
+  o:[['Get straight in, the hot water will clean me',0,'😧','A bather frowns and glances at the shower stools.'],['Wear my swimsuit and bring my towel into the water',0,'🙅','Staff ask you to remove the swimsuit. Most onsen don’t allow swimwear.'],['Wash at the shower stools first, and keep my towel out of the water',1,'😊','The regulars shift over to make room for you.']],
+  why:'Bathers wash fully before entering the shared bath, and towels stay out of the water. Some baths also have rules on tattoos, so check before you go.',src:'JP'},
+ {m:'shop',sev:1,em:'🛍️',place:'Drugstore, Shinsaibashi',q:'There’s a small tray on the counter as you pay.',
+  o:[['Put my cash or card in the tray',1,'😊','The cashier counts your change back with a bow.'],['Hand the cash into the cashier’s palm',0,'🙂','They take it, but the tray was there for a reason.'],['Toss the notes on the counter',0,'😠','The cashier stiffens. It looks careless.']],
+  why:'Many shops use a cash tray so money is placed down and counted openly. Use it, and offer cards with both hands.',src:'JP'},
+ {m:'emerg',sev:3,check:1,em:'🚑',place:'A street in Osaka',q:'Someone collapses on the pavement. Which number do you call for an ambulance?',
+  o:[['911',0,'😰','No answer. 911 doesn’t work in Japan.'],['110',0,'😟','That’s the police. They’ll help, but you’ve lost time.'],['119',1,'😮‍💨','An ambulance is on its way.']],
+  why:'In Japan call 119 for an ambulance or fire and 110 for the police. JNTO’s Japan Visitor Hotline also helps in English, day and night.',src:'JP'}
+],
+Seoul:[
+ {m:'arrive',sev:1,em:'🙇',place:'Meeting your host in Bukchon',q:'Your hanok host, in her sixties, greets you at the gate.',
+  o:[['Go in for a big hug',0,'😳','She steps back, startled.'],['Offer a high five',0,'😅','She laughs, but it’s awkward.'],['Bow slightly and say “안녕하세요”',1,'😊','She bows back and hands you a cup of barley tea.']],
+  why:'A slight bow with a greeting is the standard way to greet someone older. Hugs between new acquaintances are uncommon.',src:'KR'},
+ {m:'arrive',sev:1,em:'🎂',place:'Meeting your tour group, Hongdae',q:'A new Korean friend asks how old you are within a minute of meeting.',
+  o:[['Tell them. It helps them choose how to speak to me',1,'😄','“I’m older, so call me unni!” You’re friends already.'],['Refuse, it’s too personal',0,'😕','They look confused. They were being polite.'],['Make up a number as a joke',0,'😅','They believe you and use the wrong titles all day.']],
+  why:'Age shapes speech levels and titles in Korea, so asking early is normal and friendly. Korea now uses international age officially.',src:'KR'},
+ {m:'arrive',sev:1,em:'☎️',place:'Lost in Insadong',q:'Your phone translator can’t explain where you want to go. What do you do?',
+  o:[['Call 1330, the Korea Travel Hotline',1,'😌','An English-speaking operator talks you and the driver through it.'],['Repeat myself louder in English',0,'😣','The shopkeeper backs away, flustered.'],['Give up and go back to the hotel',0,'😔','You miss the tea house you came for.']],
+  why:'1330 is the Korea Tourism Organization’s travel hotline. It runs around the clock in English and other languages, and can interpret for you.',src:'KTO'},
+ {m:'move',sev:2,check:1,em:'🚇',place:'Seoul Metro, Line 2',q:'The only empty seat is a pink one. Do you take it?',
+  o:[['Leave it free, it’s for pregnant passengers',1,'🤰','A pregnant passenger boards and sits with a grateful smile.'],['Sit, and move if a pregnant woman gets on',0,'😟','She may not ask. She ends up standing by the door.'],['Sit. The rule is only for locals',0,'😑','Other passengers stare. The rule applies to everyone.']],
+  why:'Pink seats on Seoul’s metro are set aside for pregnant passengers, who may not look pregnant yet. Leave them empty even when the train is busy.',src:'KR'},
+ {m:'move',sev:2,em:'🧓',place:'Seoul Metro, end of the carriage',q:'The seats at the end of the carriage are empty and you’re tired.',
+  o:[['Sit. Nobody is using them',0,'😑','An older man boards and looks pointedly at you.'],['Leave them for older, disabled and pregnant passengers',1,'👵','A grandmother sits down and offers you a tangerine.'],['Put my shopping bags on them',0,'😠','Passengers tut. Those seats are reserved.']],
+  why:'Priority seats at the ends of each carriage are for older, disabled and pregnant passengers. Younger people usually leave them empty even when the train is full.',src:'KR'},
+ {m:'move',sev:1,em:'🚌',place:'City bus, Busan',q:'You tapped your T-money card when you got on. Now you’re getting off.',
+  o:[['Tap the card again at the back door',1,'😊','“Hwanseung imnida.” Your next ride counts as a transfer.'],['Just hop off',0,'😕','You lose the transfer discount on your next ride.'],['Pay the driver cash on the way out',0,'🤔','The driver waves you off. You already paid.']],
+  why:'Tap your card when you get off buses too. It sets your fare and gives you a free or cheap transfer within about 30 minutes.',src:'KR'},
+ {m:'eat',sev:2,check:1,em:'🍶',place:'Dinner with a friend’s parents, Mapo',q:'Your friend’s father offers to pour you soju. How do you take it?',
+  o:[['Hold my glass with one hand and keep chatting',0,'😐','He pauses. Your friend whispers, “Two hands.”'],['Hold the glass with both hands, then turn slightly away to drink',1,'😄','He laughs. “잘 마시네!” (You can drink!)'],['Wave him off and pour my own',0,'😬','Your friend winces. Pouring your own looks odd here.']],
+  why:'When someone older pours for you, hold the glass with two hands. Turning slightly away from elders as you drink is a common courtesy. Pour for others, and let them pour for you.',src:'KR'},
+ {m:'eat',sev:2,em:'🍚',place:'Family dinner table',q:'The food has arrived and everyone is seated. When do you start eating?',
+  o:[['Straight away, while it’s hot',0,'😶','The table goes quiet. Grandma hasn’t picked up her spoon.'],['After the eldest person starts',1,'😊','Grandma smiles and puts the best galbi on your plate.'],['Serve myself the best piece first',0,'😳','Your friend’s mum laughs nervously.']],
+  why:'At a Korean table the eldest person is served first and starts first. Everyone else follows.',src:'KR'},
+ {m:'eat',sev:3,check:1,em:'🥢',place:'Lunch at a gukbap restaurant',q:'You pause mid-meal. Where do your chopsticks go?',
+  o:[['Stand them upright in my rice',0,'😨','The owner rushes over. Upright chopsticks recall offerings for the dead.'],['Point them at the dish I want next',0,'😕','Pointing with chopsticks reads as rude.'],['Lay them flat on the table or the rest',1,'👍','The owner refills your banchan without being asked.']],
+  why:'Chopsticks or a spoon standing upright in rice look like offerings at ancestral rites. Lay them flat when you pause.',src:'KR'},
+ {m:'eat',sev:1,em:'🔔',place:'Fried chicken place, Itaewon',q:'You want to order more, but no staff are nearby. What do you do?',
+  o:[['Press the call button on the table, or call “Jeogiyo!”',1,'😊','A server appears in seconds. “Ne!”'],['Snap my fingers at a server',0,'😠','The server pretends not to notice.'],['Wait silently for someone to check on me',0,'😴','Twenty minutes pass. Staff wait for you to call.']],
+  why:'Many Korean restaurants have a call button on the table. Pressing it, or calling “jeogiyo” (excuse me), is normal. Water is often self-service too.',src:'KR'},
+ {m:'sacred',sev:2,em:'🛕',place:'Jogyesa Temple, Seoul',q:'A ceremony is under way in the main hall.',
+  o:[['Walk in and film it for my story',0,'😠','A monk raises a hand and you’re asked to leave.'],['Watch quietly from the side, and only take photos where allowed',1,'🙏','A volunteer offers you a lotus lantern to hold.'],['Call my friend over loudly to see',0,'😣','Worshippers turn around mid-chant.']],
+  why:'Keep your voice low at temples, cover shoulders and knees, and don’t photograph inside halls unless signs say you may.',src:'KR'},
+ {m:'sacred',sev:3,check:1,em:'🏘️',place:'Bukchon Hanok Village, 8 pm',q:'You want night photos of the hanok alleys. What do you do?',
+  o:[['Come back in the daytime and keep my voice down',1,'🤫','A resident watering her plants smiles as you pass quietly.'],['Shoot now, with my phone light and my group',0,'😠','A resident opens a window and asks you to leave.'],['Sit on a doorstep to edit my photos',0,'😤','That doorstep belongs to someone’s home.']],
+  why:'Bukchon is a living neighbourhood. Parts of it now restrict tourist visits in the evening, and residents ask for quiet. Visit by day and never sit on doorsteps.',src:'KR'},
+ {m:'stay',sev:2,em:'👟',place:'Your hanok guesthouse',q:'There is a raised wooden floor and a shoe rack at the entrance.',
+  o:[['Step up with my shoes on, they’re clean',0,'😲','The host points at the shoe rack, alarmed.'],['Take my shoes off and leave them on the rack',1,'😊','“어서 오세요!” The host shows you to the warm ondol floor.'],['Take them off and carry them to my room',0,'🤭','The host laughs. Shoes stay at the entrance.']],
+  why:'A raised floor and a shoe rack mean shoes come off. This applies in homes, hanok stays, temples and floor-seated restaurants.',src:'KR'},
+ {m:'stay',sev:2,em:'♨️',place:'Jjimjilbang spa, Busan',q:'You are heading into the hot pools at a Korean bathhouse.',
+  o:[['Wear my swimsuit into the pools',0,'🙅','An attendant points you back to the showers.'],['Shower thoroughly, then get in without a swimsuit',1,'😊','An ajumma nods and later offers you a baked egg.'],['Jump straight in after the sauna',0,'😧','Bathers frown. Everyone washes first.']],
+  why:'The bathing areas are single-sex and swimwear-free, and you shower before getting in. In the shared sauna areas you wear the clothes the spa gives you.',src:'KR'},
+ {m:'shop',sev:1,em:'💳',place:'Convenience store, Myeong-dong',q:'The cashier hands you your change and receipt.',
+  o:[['Grab it with one hand while checking my phone',0,'😐','The cashier looks a little put out.'],['Take it with both hands, or right hand with left on my wrist',1,'😊','The cashier smiles. “감사합니다!”'],['Wait for them to put it on the counter',0,'🤷','It works, but you’ve missed an easy chance to show respect.']],
+  why:'Giving and receiving with two hands, or with the left hand supporting the right, shows respect. It matters most with older people.',src:'KR'},
+ {m:'emerg',sev:3,check:1,em:'🚑',place:'Hiking trail, Bukhansan',q:'Your friend slips and badly hurts an ankle. Which number do you call for an ambulance?',
+  o:[['112',0,'😟','That’s the police. They’ll help, but you’ve lost time.'],['119',1,'😮‍💨','Rescue is on the way.'],['911',0,'😰','No answer. 911 doesn’t work in Korea.']],
+  why:'In Korea call 119 for an ambulance or fire and 112 for the police. 1330 can interpret if you get stuck.',src:'KR'}
+]};
+const BYID = {};
+Object.keys(QUEST).forEach(d => QUEST[d].forEach((q, i) => { q.id = d + i; BYID[q.id] = q; }));
+
+/* Phrase pack by locality. tone: polite = safe with staff, casual = friends, local = regional dialect. */
+const REGIONS = {
+Tokyo:[
+ {name:'Everywhere', sub:'Standard Japanese', blurb:'Every phrase in a polite version for staff and a casual one for friends.', p:[]},
+ {name:'Tokyo · Kanto', sub:'Tokyo slang', blurb:'Fast and trendy, close to standard Japanese.', p:[
+   ['That’s amazing','やばい！','Yabai!','Amazing! (or awful). Context decides','casual'],
+   ['Seriously?','マジで？','Maji de?','Seriously?','casual'],
+   ['That’s hilarious','ウケる','Ukeru','That’s so funny','casual'],
+   ['Nice, right?','いいじゃん','Ii jan','Nice, isn’t it? The “-jan” ending started in Yokohama','local']]},
+ {name:'Osaka · Kansai', sub:'Kansai-ben', blurb:'Warm, loud and famous for comedy.', p:[
+   ['Thank you','おおきに','Ōkini','Thank you','local'],
+   ['So tasty','めっちゃうまい','Meccha umai','Really tasty. “Meccha” means very','local'],
+   ['Really?','ほんま？','Honma?','Really?','local'],
+   ['No good','あかん','Akan','No good, don’t','local'],
+   ['Why on earth?!','なんでやねん！','Nande ya nen!','The classic Osaka comedy comeback','casual']]},
+ {name:'Kyoto', sub:'Kyō-kotoba', blurb:'Soft, elegant and famously indirect.', tip:'If a Kyoto host offers you bubuzuke (rice with tea), the old joke says it’s a polite hint to leave.', p:[
+   ['Welcome','おいでやす','Oideyasu','Welcome. You’ll hear it in old shops','local'],
+   ['Thank you','おおきに','Ōkini','Thank you','local'],
+   ['Elegant','はんなり','Hannari','Gracefully refined','local'],
+   ['That’s right','そうどす','Sō dosu','That’s so. “-dosu” is old Kyoto for “is”','local']]},
+ {name:'Hiroshima', sub:'Hiroshima-ben', blurb:'Strong, friendly and full of character.', p:[
+   ['So, because','じゃけえ','Jakē','So, because','local'],
+   ['Super tasty','ぶちうまい','Buchi umai','Super tasty. “Buchi” means very','local'],
+   ['What a hassle','たいぎい','Taigii','What a hassle','local']]},
+ {name:'Fukuoka · Hakata', sub:'Hakata-ben', blurb:'Often voted Japan’s cutest dialect.', p:[
+   ['Really tasty','ばりうまか','Bari umaka','Really tasty. “Bari” means very','local'],
+   ['Good, fine','よか','Yoka','Good, that’s fine','local'],
+   ['What are you doing?','なんしよーと？','Nanshiyōto?','What are you doing?','local'],
+   ['I like you','すいとーよ','Suitōyo','Save this one for someone special','casual']]},
+ {name:'Hokkaido', sub:'Hokkaido-ben', blurb:'Relaxed northern speech for snowy days.', p:[
+   ['So cold','なまらしばれる','Namara shibareru','Freezing cold. “Namara” means very','local'],
+   ['Throw out the rubbish','ゴミなげて','Gomi nagete','Here “nageru” means discard, not throw!','local']]},
+ {name:'Okinawa', sub:'Uchinaaguchi', blurb:'Island words from the Ryukyuan languages.', p:[
+   ['Welcome','めんそーれ','Mensōre','Welcome to Okinawa','local'],
+   ['Hello','はいさい','Haisai','Hello. Women often say “haitai”','local'],
+   ['Thank you','にふぇーでーびる','Nifēdēbiru','Thank you','local'],
+   ['It’ll be OK','なんくるないさ','Nankurunaisa','It’ll work out, don’t worry','local']]}
+],
+Seoul:[
+ {name:'Everywhere', sub:'Standard Korean', blurb:'Every phrase in a polite version for staff and a casual one for friends.', p:[]},
+ {name:'Seoul', sub:'Seoul slang', blurb:'Standard Korean plus fast-moving youth slang.', p:[
+   ['Awesome!','대박!','Daebak!','Awesome! Huge!','casual'],
+   ['No way','헐','Heol','OMG, no way','casual'],
+   ['The best','짱','Jjang','The best','casual'],
+   ['Really?','진짜?','Jinjja?','Really? Fine with friends','casual'],
+   ['Iced americano, please','아아 주세요','A-a juseyo','Seoul runs on “a-a”, short for iced americano','casual']]},
+ {name:'Busan · Gyeongsang', sub:'Gyeongsang satoori', blurb:'Punchy and direct, from Busan to Daegu.', p:[
+   ['Have you eaten?','밥 뭇나?','Bap mutna?','Have you eaten? A friendly hello','local'],
+   ['What are you saying?','머라카노','Meorakano?','What are you on about?','local'],
+   ['Be careful','단디 해라','Dandi haera','Do it properly, be careful','local'],
+   ['Really?','맞나?','Manna?','Really? Is that so?','local']]},
+ {name:'Jeolla · Jeonju & Gwangju', sub:'Jeolla satoori', blurb:'Warm and expressive, from Korea’s food capital.', p:[
+   ['Whatchamacallit','거시기','Geosigi','Can mean almost anything','local'],
+   ['A whole lot','허벌나게','Heobeolnage','Very, a whole lot','local'],
+   ['Really delicious','겁나 맛있어','Geomna masisseo','Really delicious','local']]},
+ {name:'Jeju', sub:'Jeju language', blurb:'So distinct that UNESCO lists it as critically endangered.', p:[
+   ['Welcome','혼저 옵서예','Honjeo opseoye','Welcome. You’ll see it at the airport','local'],
+   ['Thank you','고맙수다','Gomapsuda','Thank you','local'],
+   ['A lot','하영','Hayeong','A lot, plenty','local'],
+   ['Why?','무사?','Musa?','Why?','local']]},
+ {name:'Chungcheong · Daejeon', sub:'Chungcheong satoori', blurb:'Famously slow and laid-back.', p:[
+   ['Okay, sure','그래유','Geuraeyu','Okay, sure','local'],
+   ['It’s fine','괜찮아유','Gwaenchanayu','It’s fine, no worries','local']]}
+]};
+/* Standard phrases: polite (staff) and casual (friends) versions, free for everyone. */
+const PHRASES = {
+  Tokyo:[
+    {sit:'Ask for the bill', en:'The bill, please', polite:['お会計お願いします','Okaikei onegaishimasu'], casual:['お会計して','Okaikei shite']},
+    {sit:'Where is the platform?', en:'Where is platform 3?', polite:['3番線はどこですか？','San-bansen wa doko desu ka?'], casual:['3番線どこ？','San-bansen doko?']},
+    {sit:'Is this seat free?', en:'Is this seat free?', polite:['この席、空いていますか？','Kono seki, aite imasu ka?'], casual:['ここ空いてる？','Koko aiteru?']},
+    {sit:'May I take a photo?', en:'May I take a photo?', polite:['写真を撮ってもいいですか？','Shashin o totte mo ii desu ka?'], casual:['写真撮っていい？','Shashin totte ii?']},
+    {sit:'Where is a bin?', en:'Where is a rubbish bin?', polite:['ゴミ箱はどこですか？','Gomibako wa doko desu ka?'], casual:['ゴミ箱どこ？','Gomibako doko?']},
+    {sit:'I have an allergy', en:'I’m allergic to shrimp', polite:['えびのアレルギーがあります','Ebi no arerugī ga arimasu'], casual:['えびダメなんだ','Ebi dame nanda']}],
+  Seoul:[
+    {sit:'Ask for the bill', en:'The bill, please', polite:['계산해 주세요','Gyesanhae juseyo'], casual:['계산해 줘','Gyesanhae jwo']},
+    {sit:'Where is the subway?', en:'Where is the subway station?', polite:['지하철역이 어디예요?','Jihacheol-yeogi eodiyeyo?'], casual:['지하철역 어디야?','Jihacheol-yeok eodiya?']},
+    {sit:'Is this seat free?', en:'Is anyone sitting here?', polite:['여기 자리 있어요?','Yeogi jari isseoyo?'], casual:['여기 자리 있어?','Yeogi jari isseo?']},
+    {sit:'May I take a photo?', en:'May I take a photo?', polite:['사진 찍어도 돼요?','Sajin jjigeodo dwaeyo?'], casual:['사진 찍어도 돼?','Sajin jjigeodo dwae?']}]
+};
+/* Lily Video Call: a short check-in conversation. r = [native, romanisation, English, polite?, Lily's reply or a coaching tip]. */
+const CALLS = {
+  Tokyo:{title:'Check in at your ryokan', turns:[
+    {q:['いらっしゃいませ。ご予約のお名前は？','Irasshaimase. Go-yoyaku no o-namae wa?','Welcome. What name is the booking under?'], r:[
+      ['ジョーダンです。予約しています。','Jōdan desu. Yoyaku shite imasu.','I’m Jordan. I have a booking.',1,['ジョーダン様、お待ちしておりました。','Jōdan-sama, omachi shite orimashita.','Welcome, Jordan. We’ve been expecting you.']],
+      ['ジョーダン！','Jōdan!','Jordan!',0,'Just your name sounds abrupt. Add “desu” and mention your booking.']]},
+    {q:['お夕食は何時になさいますか？','O-yūshoku wa nanji ni nasaimasu ka?','What time would you like dinner?'], r:[
+      ['7時がいい。','Shichi-ji ga ii.','7’s good.',0,'That’s how you’d answer a friend. Add “de onegaishimasu” for staff.'],
+      ['7時でお願いします。','Shichi-ji de onegaishimasu.','7 o’clock, please.',1,['かしこまりました。お部屋は二階でございます。','Kashikomarimashita. O-heya wa ni-kai de gozaimasu.','Certainly. Your room is on the second floor.']]]},
+    {q:['何かご質問はございますか？','Nanika go-shitsumon wa gozaimasu ka?','Do you have any questions?'], r:[
+      ['朝ごはんは何時ですか？','Asagohan wa nanji desu ka?','What time is breakfast?',1,['朝食は七時から九時まででございます。ごゆっくりどうぞ。','Chōshoku wa shichi-ji kara ku-ji made de gozaimasu. Go-yukkuri dōzo.','Breakfast is from 7 to 9. Enjoy your stay.']],
+      ['ない。','Nai.','Nope.',0,'Too blunt. Try “daijōbu desu” (I’m fine), or ask a question.'],
+      ['温泉は何時までですか？','Onsen wa nanji made desu ka?','Until what time is the onsen open?',1,['温泉は夜十一時まででございます。ごゆっくりどうぞ。','Onsen wa yoru jūichi-ji made de gozaimasu. Go-yukkuri dōzo.','The onsen is open until 11 pm. Enjoy your stay.']]]}]},
+  Seoul:{title:'Check in at your hanok stay', turns:[
+    {q:['어서 오세요. 예약하신 성함이 어떻게 되세요?','Eoseo oseyo. Yeyakhasin seongham-i eotteoke doeseyo?','Welcome. What name is the booking under?'], r:[
+      ['조던.','Jodeon.','Jordan.',0,'Just your name sounds abrupt. Add “-ieyo” and mention your booking.'],
+      ['조던이에요. 예약했어요.','Jodeon-ieyo. Yeyakhaesseoyo.','I’m Jordan. I made a booking.',1,['조던 님, 기다리고 있었어요.','Jodeon-nim, gidarigo isseosseoyo.','Welcome, Jordan. We’ve been expecting you.']]]},
+    {q:['아침 식사는 몇 시에 하시겠어요?','Achim siksaneun myeot si-e hasigesseoyo?','What time would you like breakfast?'], r:[
+      ['여덟 시에 주세요.','Yeodeol si-e juseyo.','At eight, please.',1,['네, 알겠습니다. 방은 마당 왼쪽이에요.','Ne, algetseumnida. Bang-eun madang oenjjok-ieyo.','Certainly. Your room is on the left of the courtyard.']],
+      ['여덟 시.','Yeodeol si.','Eight.',0,'Too short for a host. Add “-e juseyo” to make it polite.']]},
+    {q:['궁금한 거 있으세요?','Gunggeumhan geo isseuseyo?','Any questions?'], r:[
+      ['없어.','Eopseo.','Nope.',0,'That’s casual speech. Use “eopseoyo” or ask a question.'],
+      ['근처에 맛집 있어요?','Geuncheo-e matjip isseoyo?','Any good restaurants nearby?',1,['골목 끝 칼국수 집이 맛있어요. 편히 쉬세요!','Golmok kkeut kalguksu jibi masisseoyo. Pyeonhi swiseyo!','The kalguksu place at the end of the alley is great. Rest well!']],
+      ['와이파이 비밀번호가 뭐예요?','Waipai bimilbeonhoga mwoyeyo?','What’s the Wi-Fi password?',1,['방에 적혀 있어요. 편히 쉬세요!','Bang-e jeokhyeo isseoyo. Pyeonhi swiseyo!','It’s written in your room. Rest well!']]]}]}
+};
+function startCall(){ const c = CALLS[S.dest]; S.call = {turn:0, wrong:null, firstTry:0, done:false, log:[{who:'lily', t:c.turns[0].q}]}; }
+function reply(i){ const C = S.call, turn = CALLS[S.dest].turns[C.turn], r = turn.r[i];
+  if(!r[3]){ C.wrong = i; C.missed = true; render(); return; }
+  if(!C.missed) C.firstTry++;
+  C.log.push({who:'you', t:[r[0], r[1], r[2]]}, {who:'lily', t:r[4]}); C.wrong = null; C.missed = false; C.turn++;
+  const next = CALLS[S.dest].turns[C.turn];
+  if(next) C.log.push({who:'lily', t:next.q}); else C.done = true;
+  say(r[0]); render(); const v = $('view'); v.scrollTop = v.scrollHeight; }
+const FREE_LOOKUPS = 5, SUPER_YEAR = 84;
+const SOS = {Tokyo:[['119','Ambulance & fire'],['110','Police'],['JNTO','Visitor hotline']], Seoul:[['119','Ambulance & fire'],['112','Police'],['1330','Travel hotline']]};
+
+/* State */
+const DAY = 86400000;
+const midnight = d => { const x = new Date(d); x.setHours(0,0,0,0); return x; };
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const TODAY = midnight(new Date());
+const LEVELS = {beg:{name:'Beginner', note:'New to the language', base:22}, int:{name:'Intermediate', note:'I know the basics', base:45}};
+/* Restaurant lesson per level. o = [native, romanisation, correct, feedback]. */
+const LESSONS = {
+  beg:{icon:'🍱', tag:'New phrase', node:'Ordering food', q:'You’ve finished eating. Ask for the bill politely.',
+    Tokyo:[['お会計お願いします','Okaikei onegaishimasu',1,'“Onegaishimasu” softens the request. You don’t tip in Japan, and you often pay at the counter.'],['勘定！','Kanjō!',0,'Understood, but too blunt. That form is for friends.'],['ありがとう','Arigatō',0,'That means thank you. Staff will smile, but the bill won’t come.']],
+    Seoul:[['계산해 주세요','Gyesanhae juseyo',1,'“Juseyo” makes it polite. In Korea you usually pay at the counter on the way out.'],['계산해','Gyesanhae',0,'Understood, but too blunt. That form is for friends.'],['감사합니다','Gamsahamnida',0,'That means thank you. Staff will smile, but the bill won’t come.']]},
+  int:{icon:'🍣', tag:'Conversation', node:'Asking for recommendations', q:'The menu has no pictures. Ask the server politely what they recommend.',
+    Tokyo:[['おすすめは何ですか？','Osusume wa nan desu ka?',1,'“Osusume” means recommendation, and “desu ka” keeps it polite. Staff will often point to the seasonal special.'],['おすすめ、ある？','Osusume, aru?',0,'Right idea, but that’s how you’d ask a friend. Use “desu ka” with staff.'],['これは何ですか？','Kore wa nan desu ka?',0,'Polite, but that asks “what is this?”, not what they recommend.']],
+    Seoul:[['뭐가 맛있어요?','Mwoga masisseoyo?',1,'“What’s good here?” is the natural, polite way to ask. The “-yo” ending keeps it polite.'],['추천해 줘','Chucheonhae jwo',0,'Right idea, but “jwo” is for friends. Use “juseyo” or “-yo” with staff.'],['이게 뭐예요?','Ige mwoyeyo?',0,'Polite, but that asks “what is this?”, not what they recommend.']]}
+};
+const WHEEL_H = 36, MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const S = {step:'welcome', dest:'Tokyo', level:'beg', date:iso(new Date(TODAY.getTime() + 56*DAY)), lesson:null, lessonOk:false,
+  run:null, doneM:{}, checkRes:null, mistakes:{}, xp:540, hearts:5, region:0, query:'', shareImg:null,
+  pass:false, tier:'full', want:null, from:null, used:0, opened:{}, reg:{}, calls:0, call:null};
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const D = () => DEST[S.dest];
+const Q = () => QUEST[S.dest];
+const icon = (m, size = 26) => ic(MOMENTS[m][1] || D().sacred, size);
+
+function tripDate(){ const [y,m,d] = S.date.split('-').map(Number); return y ? new Date(y, m-1, d) : null; }
+function daysLeft(){ const t = tripDate(); return t ? Math.round((t - TODAY) / DAY) : NaN; }
+function plan(){
+  const days = daysLeft(), crash = days <= 14, order = crash ? ORDER_CRASH : ORDER_FULL;
+  const weeks = Math.max(1, Math.floor(days / 7));
+  const label = i => crash ? (i < 3 ? 'Day-1 essential' : 'If you have time') : `Week ${Math.min(weeks, Math.floor(i * weeks / order.length) + 1)}`;
+  const minutes = crash ? 15 : days > 42 ? 8 : 12;
+  return {days, crash, order, label, minutes, weeks};
+}
+const langScore = () => LEVELS[S.level].base + (S.lessonOk ? 2 : 0);
+function band(s){ return s < 10 ? ['A1','Intro'] : s < 20 ? ['A1','Beginner'] : s < 30 ? ['A1','Advanced'] : s < 60 ? ['A2','Elementary'] : ['B1','Intermediate']; }
+const checkCorrect = () => S.checkRes ? S.checkRes.filter(r => r.ok).length : 0;
+const checkTotal = () => S.checkRes ? S.checkRes.length : 5;
+const passed = () => checkCorrect() >= 4;
+function readiness(){ const m = Object.keys(S.doneM).length; return Math.round(10 + (m / 7) * 55 + (S.lessonOk ? 10 : 0) + (S.checkRes ? 25 * checkCorrect() / checkTotal() : 0)); }
+
+/* Bars remember their last width so every change animates. */
+const BARS = {};
+function bar(key, pct, color){ const from = BARS[key] ?? 0;
+  return `<div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i data-bar="${key}" data-to="${pct}" style="width:${from}%;${color?`background:${color}`:''}"></i></div>`; }
+function animateBars(){ requestAnimationFrame(() => requestAnimationFrame(() => {
+  document.querySelectorAll('[data-bar]').forEach(el => { el.style.width = el.dataset.to + '%'; BARS[el.dataset.bar] = +el.dataset.to; }); })); }
+
+function say(text){ try{ const u = new SpeechSynthesisUtterance(text); u.lang = D().voice; u.rate = .9; speechSynthesis.cancel(); speechSynthesis.speak(u); }catch(e){} }
+function toast(msg){ const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role','status'); t.innerHTML = msg; $('screen').appendChild(t); setTimeout(() => t.remove(), 2400); }
+const T = k => `<span class="t ${k}">${k==='free'?'FREE':k==='pass'?'TRIP PASS':'SUPER'}</span>`;
+const callCap = () => S.tier==='lite' ? 3 : 10;
+function tab(){ return ({set:'set', go:'go'})[S.step] || (S.step==='pass' && S.from==='set' ? 'set' : 'ready'); }
+function need(feature){ S.want = feature; S.from = tab(); go('pass'); }
+function go(step){ S.step = step; render(); $('view').scrollTop = 0; }
+function sevChip(n){ return `<span class="sev s${n}"><i>${SEV[n][1]}</i>${SEV[n][0]}</span>`; }
+
+function startRun(kind, ids, title, m){
+  S.run = {kind, ids, title, m, i:0, pick:null, phase:'choose', results:[], combo:0, best:0, start:Date.now()};
+  S.hearts = 5; go('run');
+}
+function startCheck(){ startRun('check', Q().filter(q => q.check).map(q => q.id), 'Trip-ready check'); }
+function startMoment(m){ startRun('moment', Q().filter(q => q.m === m).map(q => q.id), MOMENTS[m][0], m); }
+function startMistakes(){
+  const ids = Object.keys(S.mistakes).filter(id => BYID[id] && id.startsWith(S.dest))
+    .sort((a,b) => BYID[b].sev - BYID[a].sev);
+  if(ids.length) startRun('mistakes', ids, 'Practise mistakes');
+}
+const myMistakes = () => Object.keys(S.mistakes).filter(id => id.startsWith(S.dest));
+
+const V = {
+welcome(){ return `
+  ${duoSay('Hi, I’m Duo! Tell me where and when you’re flying, and I’ll build your plan, manners included.', 'happy', 72)}
+  <div class="card"><p class="small">Where are you going?</p><div class="pills" style="margin-top:8px">
+    ${Object.keys(DEST).map(d => `<button type="button" class="pill" aria-pressed="${S.dest===d}" data-act="dest" data-v="${d}">${DEST[d].flag} ${DEST[d].country} · ${d}</button>`).join('')}</div></div>
+  <div class="card"><p class="small" id="dateLbl">When do you leave? Scroll to pick a date</p>
+    <div class="wheel-labels" aria-hidden="true"><span>Day</span><span>Month</span><span>Year</span></div>
+    <div class="wheel" role="group" aria-labelledby="dateLbl">
+      ${wheelCol('d', 'Day', Array.from({length:31}, (_,i) => String(i+1)))}
+      ${wheelCol('m', 'Month', MONTHS)}
+      ${wheelCol('y', 'Year', Array.from({length: Math.max(1, 2035 - TODAY.getFullYear() + 1)}, (_,i) => String(TODAY.getFullYear()+i)))}
+    </div>
+    <p class="small" id="planLine" style="margin-top:10px">${planLine()}</p></div>
+  <div class="card"><p class="small">Your ${D().lang} level</p><div class="lvl">
+    ${Object.keys(LEVELS).map(k => `<button type="button" class="pill" aria-pressed="${S.level===k}" data-act="level" data-v="${k}">${LEVELS[k].name}<small>${LEVELS[k].note}</small></button>`).join('')}</div></div>
+  <button type="button" class="btn" id="startBtn" data-act="go" data-v="home" ${Number.isFinite(daysLeft()) && daysLeft() > 0 ? '' : 'disabled'}>Build my plan</button>
+  <p class="small" style="text-align:center">${T('free')} Countdown, personalised plan, Culture Quest and trip-ready badge</p>`; },
+
+home(){ const P = plan(), next = P.order.find(m => !S.doneM[m]);
+  const offs = [0,-52,-72,-52,0,52,72,52,0];
+  const stops = [
+    {html:`<button type="button" class="node ${S.lessonOk?'done':'now'}" aria-label="${LESSONS[S.level].node} lesson" data-act="go" data-v="lesson">${S.lessonOk?ic('check',28):ic(LESSONS[S.level].icon,26)}</button>`, lbl:`${LESSONS[S.level].node}${S.lessonOk?'':'<em>Language lesson</em>'}`, start:!S.lessonOk},
+    ...P.order.map((m,i) => ({html:`<button type="button" class="node ${S.doneM[m]?'done':(S.lessonOk && m===next?'now':'')}" aria-label="${MOMENTS[m][0]}" data-act="moment" data-v="${m}">${S.doneM[m]?ic('check',28):icon(m)}</button>`, lbl:`${MOMENTS[m][0]}<em>${P.label(i)}</em>`, start:S.lessonOk && m===next})),
+    {html:`<button type="button" class="node trophy ${S.checkRes?'done':''}" aria-label="Trip-ready check" data-act="check">${S.checkRes?ic('medal',32):ic('trophy',32)}</button>`, lbl:'Trip-ready check<em>5 situations · 60 seconds</em>'}];
+  return `
+  <div class="unit"><div><small>Unit 1 · ${P.crash ? 'Crash plan' : `${P.weeks}-week plan`}</small><b>Get ready for ${D().country}</b></div><span class="book">${ic('book-open',26)}</span></div>
+  <div class="card"><div class="count"><b>${P.days}</b><span style="font-weight:900;font-size:19px">days to ${S.dest}</span></div>
+    <p class="small" style="margin:6px 0 8px">Trip-ready ${readiness()}% · ${P.minutes} minutes a day keeps you on plan</p>${bar('ready', readiness())}</div>
+  ${S.checkRes ? '' : `<button type="button" class="btn purple" data-act="check">Take the 60-second trip-ready check</button>`}
+  ${duoSay(P.crash ? `Only ${P.days} days! I’ve put the Day-1 essentials first.` : `Plenty of time. One unit a week and you’ll land ready.`, 'happy', 52)}
+  <div class="path">${stops.map((s,i) => `<div class="stop" style="transform:translateX(${offs[i % offs.length]}px)">${s.start?'<span class="startflag">START</span>':''}${s.html}<span class="lbl">${s.lbl}</span></div>`).join('')}</div>
+  ${myMistakes().length ? `<button type="button" class="btn ghost" data-act="mistakes">Practise my mistakes · ${myMistakes().length}</button>` : ''}
+  <p class="small">Path, Culture Quest and badge ${T('free')} · extras below</p>
+  <div class="feats">
+    <button type="button" class="feat ${S.pass?'':'locked'}" data-act="${S.pass?'go':'need'}" data-v="${S.pass?'rehearse':'Video Call rehearsals with Lily'}">${S.pass?'':`<span class="lk">${ic('lock',16)}</span>`}<span class="ic">${ic('phone-call')}</span>Rehearse with Lily${T('pass')}</button>
+    <button type="button" class="feat ${S.pass?'':'locked'}" data-act="${S.pass?'dialects':'need'}" data-v="${S.pass?'':'Regional dialects and slang'}">${S.pass?'':`<span class="lk">${ic('lock',16)}</span>`}<span class="ic">${ic('languages')}</span>Regional dialects${T('pass')}</button>
+    <button type="button" class="feat" data-act="go" data-v="group"><span class="ic">${ic('users')}</span>Trip Group${T('free')}</button>
+    <button type="button" class="feat ${S.pass?'':'locked'}" data-act="${S.pass?'toast':'need'}" data-v="${S.pass?'Whole plan downloaded for offline use':'The whole plan offline'}">${S.pass?'':`<span class="lk">${ic('lock',16)}</span>`}<span class="ic">${ic('download')}</span>Plan offline${T('pass')}</button>
+  </div>`; },
+
+rehearse(){ if(!S.call) startCall(); const C = S.call, c = CALLS[S.dest], turn = c.turns[C.turn], left = callCap() - S.calls;
+  const bub = e => `<div class="msg from-${e.who}">${e.who==='lily' ? '<span class="lav">L</span>' : ''}<div class="mb"><span class="cjk">${e.t[0]}</span><span class="rom">${e.t[1]}</span><span class="en">${e.t[2]}</span></div></div>`;
+  return `<p class="small">${T('pass')} Video Call rehearsal · ${left} of ${callCap()} calls left on your pass</p>
+  <div class="callhead"><span class="lily">L</span><div style="min-width:0"><b>Lily</b><span class="small">${c.title} · ${C.done ? 'call complete' : `reply ${C.turn+1} of ${c.turns.length}`}</span></div><div class="wave" aria-hidden="true">${[10,18,26,14,22,30,12,20].map(h=>`<i style="height:${h}px"></i>`).join('')}</div></div>
+  <div class="chat">${C.log.map(bub).join('')}</div>
+  ${C.done ? `<div class="fb ok">Call complete!<p>${C.firstTry} of ${c.turns.length} replies polite on the first try. Lily will call again with a new situation tomorrow.</p></div>
+    <button type="button" class="btn" data-act="endCall">End call</button>` : `
+  <p class="small">Your reply. Tap one, or tap the mic and say it.</p>
+  ${turn.r.map((r,i) => `<button type="button" class="opt ${C.wrong===i?'no':''}" ${C.wrong===i?'disabled':''} data-act="reply" data-v="${i}"><span class="cjk" style="font-size:17px">${r[0]}</span><br><span class="rom">${r[1]}</span><br><span class="small">${r[2]}</span></button>`).join('')}
+  ${C.wrong!==null ? `<div class="fb no">Lily smiles and waits.<p>${turn.r[C.wrong][4]}</p></div>` : ''}
+  <button type="button" class="mic" id="mic" aria-label="Tap the mic and say your reply" data-act="listen">${ic('mic',36)}</button>
+  <p class="small" style="text-align:center">Speech is simulated in this demo</p>`}
+  ${C.done ? '' : `<button type="button" class="btn ghost" data-act="endCall">Hang up</button>`}`; },
+
+pass(){ const TIERS = [['lite','Trip Pass Lite','6-week plan offline, regional dialects, 3 rehearsal calls with Lily, ask a local host','$14.99'],
+                       ['full','Trip Pass','8-week plan offline, regional dialects, 10 rehearsal calls, ask a local host','$24.99'],
+                       ['two','Pass for two','Everything in Trip Pass for you and a travel partner','$34.99']];
+  return `<p class="small">${S.want?`${ic('lock',14)} ${esc(S.want)} is part of the Trip Pass`:'One payment for one trip. No subscription.'}</p><h2>Get the Trip Pass</h2>
+  ${TIERS.map(t => `<button type="button" class="card tier" aria-pressed="${S.tier===t[0]}" data-act="tier" data-v="${t[0]}"><span style="min-width:0"><b style="font-size:16px">${t[1]}</b><br><span class="small">${t[2]}</span></span><span class="price">${t[3]}</span></button>`).join('')}
+  <p class="small">One payment, no subscription. Already on Super? Trip Mode is included. After the trip, your pass price counts toward a year of Super.</p>
+  <button type="button" class="btn purple" data-act="buy">Continue (demo)</button>
+  <button type="button" class="btn ghost" data-act="go" data-v="${S.from==='set'?'set':'home'}">Not now</button>`; },
+
+lesson(){ const L = S.lesson, LS = LESSONS[S.level], opts = LS[S.dest], inter = S.level==='int';
+  const pct = L===null ? 10 : 100;
+  return `
+  <div class="lhead"><button type="button" class="xbtn" aria-label="Close lesson" data-act="go" data-v="home">×</button>${bar('lesson', pct)}</div>
+  <div class="row" style="justify-content:space-between"><span class="tagline">${ic(LS.icon,18)} ${LS.tag}</span><span class="small">${LEVELS[S.level].name}</span></div>
+  <h2>${LS.q}</h2>
+  <div class="row"><button type="button" class="play" aria-label="Play the polite phrase" data-act="say" data-v="${esc(opts[0][0])}">${ic('volume-2')}</button><span class="small">${inter ? 'Script only. Romanisation appears after you answer' : 'Tap to hear the polite version'}</span></div>
+  ${opts.map((o,i) => `<button type="button" class="opt ${L===null?'':(o[2]?'ok':(L===i?'no':'dim'))}" ${L!==null?'disabled':''} data-act="lesson" data-v="${i}"><span class="cjk" style="font-size:18px">${o[0]}</span>${!inter || L!==null ? `<br><span class="rom">${o[1]}</span>` : ''}</button>`).join('')}
+  ${L===null?'':`<div class="sheet ${opts[L][2]?'ok':'no'}"><h3>${opts[L][2]?'✓ Polite and natural!':'✗ Not quite'}</h3>
+    <p style="margin:0;font-weight:700;line-height:1.4">${opts[L][3]}</p>
+    <button type="button" class="btn ${opts[L][2]?'':'red'}" data-act="lessonDone">Continue</button></div>`}`; },
+
+run(){ const R = S.run, q = BYID[R.ids[R.i]], p = R.pick;
+  const pct = Math.round((R.i + (R.phase==='reveal'?1:0)) / R.ids.length * 100);
+  const res = R.phase==='reveal' ? R.results[R.results.length-1] : null, chosen = p===null ? null : q.o[p];
+  const cls = i => R.phase==='reveal' ? (q.o[i][1] ? 'ok' : (p===i ? 'no' : 'dim')) : '';
+  return `
+  <div class="lhead"><button type="button" class="xbtn" aria-label="Quit" data-act="quit">×</button>${bar('run', pct, 'var(--green)')}<span class="chip heart">${ic('heart',20,'fill')} ${S.hearts}</span></div>
+  <div class="row" style="justify-content:space-between"><span class="tagline">${icon(q.m,18)} ${MOMENTS[q.m][0]}</span><span class="small">${R.i+1} of ${R.ids.length}${R.combo>=2?` · <span class="flame">${ic('flame',14,'fill')}</span> ${R.combo} in a row`:''}</span></div>
+  ${R.i===0 && R.phase==='choose' ? `<p class="small">Guess first. Trying before you’re taught helps it stick.</p>` : ''}
+  <div class="scene"><span class="em">${sceneIc(q)}</span><div style="min-width:0"><span class="place">${q.place}</span><h2 style="font-size:19px;margin-top:4px">${q.q}</h2></div></div>
+  ${q.o.map((o,i) => `<button type="button" class="opt ${cls(i)}" ${R.phase==='reveal'?'disabled':''} data-act="pick" data-v="${i}">${o[0]}</button>`).join('')}
+  ${R.phase==='reveal' ? `
+  <div class="reaction ${res.ok?'ok':'no'}"><span class="face s${res.ok?0:q.sev}">${chosen[2]}</span><div style="min-width:0"><b>How locals react</b><p>${chosen[3]}</p></div></div>
+  <div class="why"><b>Why it matters</b><p>${q.why}</p><span class="src">${SRC[q.src]}</span></div>
+  <div class="sheet ${res.ok?'ok':'no'}">
+    <h3>${res.ok ? '✓ Nicely done!' : '✗ Not quite'} ${res.ok ? `<span class="small" style="font-size:13px">You avoided a</span>${sevChip(q.sev)}` : sevChip(q.sev)}</h3>
+    ${!res.ok && q.sev===3 ? `<p class="small" style="color:var(--red)">This is a serious slip, so Duo will bring it back first in your review.</p>` : ''}
+    <button type="button" class="btn ${res.ok?'':'red'}" data-act="next">${R.i===R.ids.length-1?'Finish':'Continue'}</button></div>` : ''}`; },
+
+done(){ const R = S.run, ok = R.results.filter(r => r.ok).length, n = R.results.length;
+  const secs = Math.round((R.end - R.start)/1000), time = `${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}`;
+  const wrong = R.results.filter(r => !r.ok).sort((a,b) => BYID[b.id].sev - BYID[a.id].sev);
+  return `
+  <div style="display:flex;justify-content:center">${duo(ok===n?'cheer':'happy', 110, 'duo-bob')}</div>
+  <h2 style="text-align:center;color:var(--yellow-d);font-size:26px">${R.kind==='check'?'Check complete!':'Lesson complete!'}</h2>
+  <div class="tiles"><div class="tile t1"><small>Total XP</small><b>${ic('zap',18,'fill')}${R.xp}</b></div><div class="tile t2"><small>${ok===n?'Amazing':'Accuracy'}</small><b>${ic('target',18)}${Math.round(ok/n*100)}%</b></div><div class="tile t3"><small>Time</small><b>${ic('timer',18)}${time}</b></div></div>
+  ${wrong.length ? `<div class="card"><b>Review before you fly</b><p class="small" style="margin-top:2px">Most serious first</p><div class="mlist">${wrong.map(r => `<div class="mitem"><span class="row" style="gap:8px">${sceneIc(BYID[r.id],18)} ${BYID[r.id].place}</span>${sevChip(BYID[r.id].sev)}</div>`).join('')}</div></div>` : `<div class="card"><b>Perfect run.</b><p class="small" style="margin-top:4px">Best streak: ${R.best} in a row.</p></div>`}
+  ${R.kind==='check' ? `<button type="button" class="btn" data-act="go" data-v="badge">See my badge</button>` : `<button type="button" class="btn" data-act="go" data-v="home">Continue</button>`}
+  ${wrong.length ? `<button type="button" class="btn ghost" data-act="mistakes">Practise these now</button>` : ''}`; },
+
+badge(){ const c = checkCorrect(), t = checkTotal(), s = langScore(), b = band(s);
+  return `
+  <div class="badge">
+    ${duo(passed()?'cheer':'happy', 84)}
+    <b>${passed() ? `${D().country}-ready!` : 'Almost ready'}</b>
+    <span style="font-weight:800">${D().flag} ${S.dest} · Culture Quest</span>
+    <div class="scorebox"><div><strong>${c}/${t}</strong><span>Etiquette</span></div><div><strong>${s}</strong><span>Duolingo Score</span></div><div><strong>${b[0]}</strong><span>${b[1]}</span></div></div>
+  </div>
+  <p class="small">Your ${D().lang} Duolingo Score is ${s} (${b[0]} ${b[1].toLowerCase()}). Etiquette is scored separately, so your manners and your language each show their own progress.</p>
+  <button type="button" class="btn" data-act="share">Share my badge</button>
+  ${passed() ? '' : `<button type="button" class="btn ghost" data-act="check">Retake the check</button>`}
+  <button type="button" class="btn ghost" data-act="go" data-v="home">Back to my plan</button>`; },
+
+share(){ const text = shareText(), u = encodeURIComponent(PUBLIC_URL), tx = encodeURIComponent(text);
+  const links = [
+    ['WhatsApp','#25D366','W',`https://wa.me/?text=${encodeURIComponent(text+' '+PUBLIC_URL)}`],
+    ['X','#14171A','X',`https://twitter.com/intent/tweet?text=${tx}&url=${u}`],
+    ['Facebook','#1877F2','f',`https://www.facebook.com/sharer/sharer.php?u=${u}`],
+    ['LinkedIn','#0A66C2','in',`https://www.linkedin.com/sharing/share-offsite/?url=${u}`],
+    ['LINE','#06C755','L',`https://social-plugins.line.me/lineit/share?url=${u}`],
+    ['Telegram','#229ED9','T',`https://t.me/share/url?url=${u}&text=${tx}`]];
+  return `
+  <h2>Share your badge</h2><p class="sub">Show friends you’re ready for ${D().country}.</p>
+  <div class="share" style="display:flex;flex-direction:column;gap:12px">
+    ${S.shareImg ? `<img src="${S.shareImg}" alt="Trip-ready badge. ${esc(text)}">` : '<div class="card"><p class="small">Drawing your badge…</p></div>'}
+    <div class="socials">${links.map(l => `<a class="soc" href="${l[3]}" target="_blank" rel="noopener"><i style="background:${l[1]}">${l[2]}</i>${l[0]}</a>`).join('')}</div>
+    <p class="small">Post your badge to your Instagram or TikTok story, or send it straight to friends.</p>
+    <label class="small" for="shareText">Message to send a friend</label>
+    <textarea class="copybox" id="shareText" rows="3" readonly>${esc(text+' '+PUBLIC_URL)}</textarea>
+    <button type="button" class="btn ghost" data-act="copy">Copy message</button>
+    <button type="button" class="btn ghost" data-act="go" data-v="badge">Back to my badge</button>
+  </div>`; },
+
+group(){ const tk = S.dest==='Tokyo'; return `
+  <p class="small">${T('free')} Trip Group · 18+ · moderated</p>
+  <h2>${S.dest} · ${tripDate().toLocaleDateString('en-GB',{month:'long',year:'numeric'})}</h2><p class="sub">Travellers going the same month and verified local hosts (example)</p>
+  <div class="card post"><span class="av" style="background:var(--blue)">J</span><div><b>Jordan</b> <span class="small">· Chicago</span>
+    <p>${tk?'Anyone doing Kyoto the week of the 18th? Looking for a ramen buddy. Also, is it rude to eat while walking in Asakusa?':'Anyone in Seoul the week of the 18th? Looking for a BBQ buddy. Also, do I really need two hands to take my change?'}</p></div></div>
+  <div class="card post"><span class="av" style="background:var(--orange)">M</span><div><b>Maya</b> <span class="small">· London</span><p>Same week! Happy to meet ${tk?'at Kyoto Station':'in Hongdae'}.</p></div></div>
+  ${S.pass
+    ? `<div class="card post"><span class="av" style="background:var(--purple)">${D().host[0]}</span><div><b>${D().host}</b><span class="host">✓ HOST · ${D().hostCity.toUpperCase()}</span>
+        <p>${tk?'For ramen near Kyoto Station, the 10th-floor ramen street opens late. Most people stop by a stall to eat rather than walking with food. Keep rubbish in a bag until you find a konbini.':'For late BBQ near Hongdae, try the side streets off Exit 9. Two hands is a nice touch with older people, and leave the pink metro seats empty.'}</p></div></div>
+       <button type="button" class="btn purple" data-act="toast" data-v="Question sent to your local hosts">Ask a local host ${T('pass')}</button>`
+    : `<div class="lockcard"><b>${ic('lock',16)} Ask a local host</b><p class="small" style="margin-top:4px">12 verified hosts answer questions and give recommendations. Posting with other travellers stays free.</p></div>
+       <button type="button" class="btn purple" data-act="need" data-v="Ask a local host">Unlock with Trip Pass</button>`}
+  <button type="button" class="btn blue" data-act="check">Practise in the trip-ready check</button>
+  <button type="button" class="btn ghost" data-act="go" data-v="home">Back to my plan</button>`; },
+
+set(){ const regs = REGIONS[S.dest], r = regs[S.region] || regs[0]; return `
+  <div class="offline"><span>${S.pass?`${ic('wifi-off',16)} Airplane mode · offline`:`${ic('wifi',16)} Online · offline needs Trip Pass`}</span><span>${S.dest==='Tokyo'?'Kyoto, day 3':'Busan, day 3'}</span></div>
+  <div class="card"><b>Emergency card</b> ${T('free')}<div class="sos">${SOS[S.dest].map(s => `<div><b>${s[0]}</b><span>${s[1]}</span></div>`).join('')}</div></div>
+  <h2>Speak like a local</h2>
+  ${S.pass ? `<div class="meter"><span>${T('pass')} Every region, works offline</span><span class="small">offline ${ic('check',14)}</span></div>`
+           : `<div class="meter"><span>${T('free')} Standard phrases, polite and casual</span><span class="small">online</span></div>`}
+  <p class="small">Choose where you are</p>
+  <div class="regions" role="group" aria-label="Choose a region">${regs.map((g,i) => `<button type="button" class="regbtn" aria-pressed="${i===S.region}" data-act="region" data-v="${i}"><b>${g.name}</b><small>${g.sub}${i>0 ? ` · ${g.p.length} phrases` : ''}</small>${i>0 && !S.pass ? `<span class="lk">${ic('lock',14)}</span>` : ''}</button>`).join('')}</div>
+  <div class="region"><b>${r.name}</b> <span class="small" style="display:inline">· ${r.sub}</span> ${S.region===0 ? T('free') : T('pass')}<p class="small" style="margin-top:4px">${r.blurb}</p>${r.tip && (S.pass || S.region===0)?`<p class="small row" style="margin-top:6px;color:var(--purple-d);align-items:flex-start;gap:6px">${ic('lightbulb',16)}<span>${r.tip}</span></p>`:''}</div>
+  ${S.region>0 && !S.pass ? `<div class="lockcard"><b>${ic('lock',16)} Regional dialects are part of the Trip Pass</b><p class="small" style="margin-top:4px">${r.p.length} ${r.sub} expressions, each tagged with when to use it.</p></div><button type="button" class="btn purple" data-act="need" data-v="Regional dialects and slang">Unlock with Trip Pass</button>` : `
+  <label class="small" for="q">Search ${r.name === 'Everywhere' ? 'phrases' : r.name}</label>
+  <input class="search" id="q" placeholder="For example: thank you, tasty, bill" value="${esc(S.query)}" autocomplete="off">
+  <div id="list">${listHTML()}</div>`}
+  <p class="small">${r.name==='Everywhere' ? 'Polite phrases are safe with staff anywhere. Culture cards are co-branded with the national tourism board.' : 'Locals love hearing their dialect from visitors. With staff, standard polite speech is always safe.'}</p>
+  ${S.pass ? `<button type="button" class="btn purple" data-act="go" data-v="group">Ask a local host for recommendations</button>` : ''}`; },
+
+go(){ return `<div class="wrapped"><p style="margin:0;font-weight:800;opacity:.9">Trip Wrapped · ${D().country} ${tripDate().getFullYear()}</p>
+    <h2 style="color:#fff">You spoke ${D().lang} in ${D().country}.</h2>
+    <div class="grid"><div><b>61</b>day streak</div><div><b>214</b>phrases learned</div><div><b>${checkCorrect()}/${checkTotal()}</b>etiquette check</div><div><b>${langScore()}</b>Duolingo Score</div></div></div>
+  ${duoSay('Your trip streak is now your Duolingo streak. Let’s keep it going!', 'cheer', 56)}
+  ${S.checkRes ? `<button type="button" class="btn ghost" data-act="share">Share my Trip Wrapped</button>` : ''}
+  <div class="card"><b>Your phrases become review units</b> ${T('free')}<p class="small" style="margin-top:4px">Everything you looked up turns into your first lessons back home.</p></div>
+  <div class="superc"><div class="row" style="justify-content:space-between"><b style="font-size:17px">Keep going with Super</b>${T('super')}</div>
+    <p style="margin:6px 0 0;font-weight:800">${S.pass ? `Your $${credit()} pass counts toward it: first year <span style="color:var(--purple)">$${(SUPER_YEAR - credit()).toFixed(0)}</span> <span class="strike">$${SUPER_YEAR}</span>` : 'Every trip included, the full course, no ads'}</p>
+    <div class="keep"><span>Offline pack and lookup history</span><span class="small">fades in 14 days</span><span>${ic('check',14)} Super</span>
+      <span>Your Trip Group and host, as alumni</span><span class="small">fades in 14 days</span><span>${ic('check',14)} Super</span>
+      <span>Trip Mode for every future trip</span><span class="small">pass per trip</span><span>${ic('check',14)} Super</span></div>
+    <button type="button" class="btn purple" style="margin-top:10px" data-act="toast" data-v="Demo only: no payment taken">Start Super</button></div>
+  <button type="button" class="btn" data-act="nextTrip">Plan my next trip ${S.dest==='Tokyo'?flagSvg('kr',20):flagSvg('jp',20)}</button>`; }
+};
+
+function planLine(){ const d = daysLeft(); if(!Number.isFinite(d) || d <= 0) return 'Pick a date after today.';
+  const t = tripDate().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  return `${t} · ${d} days away · ${d <= 14 ? 'crash plan with Day-1 essentials first' : `${Math.floor(d/7)}-week plan`}`; }
+const credit = () => S.pass ? (S.tier==='lite' ? 14.99 : S.tier==='two' ? 34.99 : 24.99) : 0;
+function standardHTML(){ const q = S.query.toLowerCase();
+  const list = PHRASES[S.dest].filter(p => !q || (p.sit+p.en+p.polite[1]+p.casual[1]).toLowerCase().includes(q));
+  if(!list.length) return '<p class="small">No match. Try “bill”, “seat” or “photo”.</p>';
+  return list.map(p => { const r = S.reg[p.sit] || 'polite', v = p[r];
+    return `<div class="card" style="margin-bottom:10px"><div class="row" style="justify-content:space-between;align-items:flex-start"><b style="min-width:0">${p.sit}</b><span class="small" style="text-align:right">${p.en}</span></div>
+    <div class="reg"><button type="button" aria-pressed="${r==='polite'}" data-act="reg" data-v="${esc(p.sit)}|polite">Polite · staff</button><button type="button" aria-pressed="${r==='casual'}" data-act="reg" data-v="${esc(p.sit)}|casual">Casual · friends</button></div>
+         <div class="row" style="margin-top:8px"><button type="button" class="play" aria-label="Play ${esc(v[1])}" data-act="say" data-v="${esc(v[0])}">▶</button><div style="min-width:0"><span class="cjk" style="font-size:19px">${v[0]}</span><br><span class="rom">${v[1]}</span></div></div></div>`; }).join(''); }
+function listHTML(){ if(S.region === 0) return standardHTML();
+  const r = REGIONS[S.dest][S.region] || REGIONS[S.dest][0], q = S.query.toLowerCase();
+  const list = r.p.filter(p => !q || (p[0]+p[2]+p[3]).toLowerCase().includes(q));
+  if(!list.length) return '<p class="small">No match offline. Try another word or region.</p>';
+  const toneLbl = {polite:'POLITE · STAFF', casual:'CASUAL · FRIENDS', local:'LOCAL DIALECT'};
+  return list.map(p => `<div class="card" style="margin-bottom:10px"><div class="row" style="justify-content:space-between;align-items:flex-start"><b style="min-width:0">${p[0]}</b><span class="tone ${p[4]}">${toneLbl[p[4]]}</span></div>
+    <div class="row" style="margin-top:8px"><button type="button" class="play" aria-label="Play ${esc(p[2])}" data-act="say" data-v="${esc(p[1])}">▶</button><div style="min-width:0"><span class="cjk" style="font-size:20px">${p[1]}</span><br><span class="rom">${p[2]}</span></div></div>
+    <p class="small" style="margin-top:6px">${p[3]}</p></div>`).join(''); }
+function shareText(){ return passed()
+  ? `I’m ${D().country}-ready! ${checkCorrect()}/${checkTotal()} on the Duolingo Trips etiquette check, Duolingo Score ${langScore()}.`
+  : `I scored ${checkCorrect()}/${checkTotal()} on the Duolingo Trips etiquette check for ${D().country}.`; }
+
+/* Badge image for sharing (1080 x 1350, a 4:5 post). */
+async function drawBadge(){
+  try{ await document.fonts.ready; }catch(e){}
+  const W = 1080, H = 1350, c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+  const g = x.createLinearGradient(0,0,W*.4,H); g.addColorStop(0,'#58CC02'); g.addColorStop(1,'#2F8F00'); x.fillStyle = g; x.fillRect(0,0,W,H);
+  x.fillStyle = 'rgba(255,255,255,.08)'; for(let i=0;i<6;i++){ x.beginPath(); x.arc(W*.88, H*.1, 120+i*90, 0, Math.PI*2); x.fill(); }
+  x.textAlign = 'center'; x.fillStyle = '#fff';
+  x.font = '900 60px Nunito, sans-serif'; x.fillText('duolingo trips', W/2, 120);
+  try{ const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(duo(passed()?'cheer':'happy', 320)); await img.decode(); x.drawImage(img, W/2-160, 160, 320, 320); }catch(e){}
+  x.font = '900 100px Nunito, sans-serif'; x.fillText(passed() ? `${D().country}-ready!` : 'Almost ready', W/2, 590);
+  x.font = '800 44px Nunito, sans-serif'; x.fillText(`${S.dest}, ${D().country} · Culture Quest`, W/2, 660);
+  const b = band(langScore());
+  [[`${checkCorrect()}/${checkTotal()}`,'Etiquette'],[String(langScore()),'Duolingo Score'],[b[0], b[1]]].forEach((cl,i) => { const cx = 90 + i*310, cy = 730;
+    x.fillStyle = 'rgba(255,255,255,.18)'; x.beginPath(); x.roundRect ? x.roundRect(cx, cy, 280, 240, 36) : x.rect(cx, cy, 280, 240); x.fill();
+    x.fillStyle = '#fff'; x.font = '900 92px Nunito, sans-serif'; x.fillText(cl[0], cx+140, cy+130);
+    x.font = '800 34px Nunito, sans-serif'; x.fillText(cl[1], cx+140, cy+195); });
+  x.font = '800 46px Nunito, sans-serif'; x.fillText('Ready to travel with good manners', W/2, 1100);
+  x.font = '700 30px Nunito, sans-serif'; x.fillStyle = 'rgba(255,255,255,.85)';
+  x.fillText('Concept prototype by SVR Consulting · not an official Duolingo product', W/2, 1280);
+  return c.toDataURL('image/png');
+}
+async function prepareShare(){ S.shareImg = await drawBadge(); if(S.step==='share') render(); }
+function copyMsg(){ const ta = $('shareText'), txt = ta.value;
+  const fallback = () => { ta.focus(); ta.select(); toast('Message selected. Copy it to share.'); };
+  try{ navigator.clipboard.writeText(txt).then(() => toast('Message copied'), fallback); }catch(e){ fallback(); } }
+
+function listen(){ const m = $('mic'); m.classList.add('listen'); m.innerHTML = '…';
+  setTimeout(() => { const i = CALLS[S.dest].turns[S.call.turn].r.findIndex(r => r[3]); reply(i); }, 1200); }
+
+function act(a, v){
+  const R = S.run;
+  switch(a){
+    case 'mode': S.pass = v==='pass'; if(S.pass) S.used = 0; render(); break;
+    case 'need': need(v); break;
+    case 'tier': S.tier = v; render(); break;
+    case 'buy': S.pass = true; S.want = null; S.used = 0; toast('Demo only: no payment taken'); go(S.from==='set' ? 'set' : 'home'); break;
+    case 'toast': toast(esc(v)); break;
+    case 'listen': listen(); break;
+    case 'endCall': S.calls = Math.min(S.calls+1, callCap()); S.call = null; go('home'); break;
+    case 'reply': reply(+v); break;
+    case 'reg': { const [sit, r] = v.split('|'); S.reg[sit] = r; $('list').innerHTML = listHTML(); break; }
+    case 'dialects': S.region = 1; S.query = ''; go('set'); break;
+    case 'dest': S.dest = v; S.lesson = null; S.lessonOk = false; S.doneM = {}; S.checkRes = null; S.region = 0; S.query = ''; S.shareImg = null; S.opened = {}; S.reg = {}; S.call = null; render(); break;
+    case 'go': go(v); break;
+    case 'say': say(v); break;
+    case 'lesson': S.lesson = +v; if(S.lesson===0){ S.lessonOk = true; S.xp += 10; say(LESSONS[S.level][S.dest][0][0]); } render(); break;
+    case 'level': S.level = v; S.lesson = null; S.lessonOk = false; render(); break;
+    case 'wheelpick': { const [k, i] = v.split('|'); const col = $('wh-' + k); col.scrollTo({top: +i * WHEEL_H, behavior: 'smooth'}); break; }
+    case 'lessonDone': S.lesson = null; go('home'); break;
+    case 'check': startCheck(); break;
+    case 'moment': startMoment(v); break;
+    case 'mistakes': startMistakes(); break;
+    case 'quit': S.run = null; go('home'); break;
+    case 'pick': { if(R.phase === 'reveal') break;
+      const q = BYID[R.ids[R.i]]; R.pick = +v; const ok = !!q.o[R.pick][1];
+      R.results.push({id:q.id, ok}); R.phase = 'reveal';
+      if(ok){ R.combo++; R.best = Math.max(R.best, R.combo); S.xp += 10; delete S.mistakes[q.id]; }
+      else { R.combo = 0; S.hearts = Math.max(0, S.hearts - 1); S.mistakes[q.id] = {sev:q.sev}; }
+      render(); $('view').scrollTop = $('view').scrollHeight;
+      if(ok && (R.combo===3 || R.combo===5)) toast(`${R.combo} in a row! Duo is proud of you.`);
+      if(S.hearts===0){ S.hearts = 5; toast('Out of hearts. Duo refilled them for this demo.'); }
+      break; }
+    case 'next': if(R.i === R.ids.length - 1){
+        R.end = Date.now(); R.xp = R.results.filter(r => r.ok).length * 10 + (R.results.every(r => r.ok) ? 5 : 0);
+        if(R.kind === 'moment') S.doneM[R.m] = true;
+        if(R.kind === 'check'){ S.checkRes = R.results.slice(); S.shareImg = null; prepareShare(); }
+        go('done');
+      } else { R.i++; R.pick = null; R.phase = 'choose'; render(); $('view').scrollTop = 0; } break;
+    case 'share': if(!S.shareImg) prepareShare(); go('share'); break;
+    case 'copy': copyMsg(); break;
+    case 'region': S.region = +v; S.query = ''; render(); break;
+    case 'nextTrip': act('dest', S.dest==='Tokyo'?'Seoul':'Tokyo'); go('welcome'); break;
+  }
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if(b && !b.disabled) act(b.dataset.act, b.dataset.v); });
+document.addEventListener('input', e => {
+  if(e.target.id==='q'){ S.query = e.target.value; $('list').innerHTML = listHTML(); }
+});
+
+/* Date roller */
+function wheelCol(k, label, items){
+  return `<div class="col" id="wh-${k}" tabindex="0" role="listbox" aria-label="${label}">${items.map((t,i) => `<div role="option" data-act="wheelpick" data-v="${k}|${i}">${t}</div>`).join('')}</div>`; }
+const daysIn = (y, m) => new Date(y, m + 1, 0).getDate();
+function wheelIndex(k){ const c = $('wh-' + k); return Math.max(0, Math.min(c.children.length - 1, Math.round(c.scrollTop / WHEEL_H))); }
+function paintWheel(){
+  const y = TODAY.getFullYear() + wheelIndex('y'), m = wheelIndex('m'), max = daysIn(y, m);
+  ['d','m','y'].forEach(k => { const i = wheelIndex(k); [...$('wh-' + k).children].forEach((el, j) => {
+    el.classList.toggle('on', j === i); el.setAttribute('aria-selected', String(j === i));
+    if(k === 'd') el.classList.toggle('off', j >= max); }); });
+}
+function readWheel(){
+  const y = TODAY.getFullYear() + wheelIndex('y'), m = wheelIndex('m'), max = daysIn(y, m);
+  let d = wheelIndex('d') + 1;
+  if(d > max){ d = max; $('wh-d').scrollTo({top: (max - 1) * WHEEL_H, behavior: 'smooth'}); }
+  S.date = iso(new Date(y, m, d)); paintWheel();
+  $('planLine').textContent = planLine();
+  $('startBtn').disabled = !(Number.isFinite(daysLeft()) && daysLeft() > 0);
+}
+function initWheel(){
+  const t = tripDate(), idx = {d: t.getDate() - 1, m: t.getMonth(), y: Math.max(0, t.getFullYear() - TODAY.getFullYear())};
+  ['d','m','y'].forEach(k => { const c = $('wh-' + k); c.scrollTop = idx[k] * WHEEL_H; let timer;
+    c.addEventListener('scroll', () => { paintWheel(); clearTimeout(timer); timer = setTimeout(readWheel, 120); }, {passive:true});
+    c.addEventListener('keydown', e => { if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){ e.preventDefault(); c.scrollBy({top: e.key === 'ArrowDown' ? WHEEL_H : -WHEEL_H, behavior: 'smooth'}); } });
+  });
+  paintWheel();
+}
+document.querySelectorAll('.nav button').forEach(b => b.addEventListener('click', () => {
+  const t = b.dataset.tab; go(t==='ready' ? (S.step==='welcome' ? 'welcome' : 'home') : t); }));
+
+function render(){
+  const inLesson = ['run','lesson'].includes(S.step);
+  $('screen').classList.toggle('lessonmode', inLesson);
+  $('view').innerHTML = V[S.step]();
+  if(S.step === 'welcome') initWheel();
+  $('dest').innerHTML = `${D().flag} ${S.dest}`;
+  $('streak').innerHTML = `${ic('flame',20,'fill')} ${12 + (S.checkRes?1:0)}`;
+  $('xp').innerHTML = `${ic('gem',20,'fill')} ${S.xp}`;
+  $('hearts').innerHTML = `${ic('heart',20,'fill')} ${S.hearts}`;
+  $('mFree').setAttribute('aria-pressed', String(!S.pass)); $('mPass').setAttribute('aria-pressed', String(S.pass));
+  document.querySelectorAll('.nav button').forEach(b => b.setAttribute('aria-current', String(b.dataset.tab===tab())));
+  statusBar();
+  animateBars();
+}
+/* Status bar: real local time; airplane mode while the offline pack is in use in the country. */
+function clock(){ $('clock').textContent = new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}).replace(/\s?[ap]\.?m\.?/i, ''); }
+clock(); setInterval(clock, 15000);
+function statusBar(){ const airplane = S.step === 'set' && S.pass;
+  $('statusIcons').innerHTML = (airplane ? `<span class="plane" title="Airplane mode">${svgIc('plane', 17)}</span>` : svgIc('signal', 17) + svgIc('wifi', 17)) + svgIc('battery-full', 22); }
+$('navA').innerHTML = ic('calendar-days', 22); $('navB').innerHTML = ic('map-pin', 22); $('navC').innerHTML = ic('house', 22);
+$('guideMark').innerHTML = `${duo('happy', 34)} duolingo <span>trips</span>`;
+render();
+</script>
+
+<script>
+/* Offline support: cache the app shell so it opens with no signal. */
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
