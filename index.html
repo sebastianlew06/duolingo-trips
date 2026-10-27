@@ -700,7 +700,7 @@ welcome(){ return `
     <div class="wheel" role="group" aria-labelledby="dateLbl">
       ${wheelCol('d', 'Day', Array.from({length:31}, (_,i) => String(i+1)))}
       ${wheelCol('m', 'Month', MONTHS)}
-      ${wheelCol('y', 'Year', Array.from({length: Math.max(1, 2035 - TODAY.getFullYear() + 1)}, (_,i) => String(TODAY.getFullYear()+i)))}
+      ${wheelCol('y', 'Year', Array.from({length: Math.max(1, 2029 - TODAY.getFullYear() + 1)}, (_,i) => String(TODAY.getFullYear()+i)))}
     </div>
     <p class="small" id="planLine" style="margin-top:10px">${planLine()}</p></div>
   <div class="card"><p class="small">Your ${D().lang} level</p><div class="lvl">
